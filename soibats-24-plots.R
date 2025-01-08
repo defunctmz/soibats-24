@@ -35,6 +35,7 @@ eb_dt_location <- eb_basedt %>%
 
 View(eb_dt_location)
 
+<<<<<<< HEAD
 # check for duplicated entries
 
 nrow(eb_dt_location)
@@ -45,6 +46,11 @@ nrow(eb_dt_location) - count(eb_dt_location[which(duplicated(eb_dt_location$id))
 
 # takes the ID numbers from the table, compares to a seq of all numbers b/w min and max
 # this works here because the seq starts from one - elsewhere, if need be, generate a seq from the first desired number to the last manually and compare to seq from data source
+=======
+# check any missing citation ID
+nrow(eb_dt_location) - count(eb_dt_location[which(duplicated(eb_dt_location$id)),])
+
+>>>>>>> 8512b7702bba0a471be6a0c9924971ab82ac66fc
 idchk_seq <- eb_dt_location$id
 idchk_seq2 <- min(eb_dt_location$id):max(eb_dt_location$id)
 idchk_seq2[!idchk_seq2 %in% idchk_seq]
@@ -66,7 +72,11 @@ eb_dt_year$year <- format(as.Date(eb_dt_year$year,
 
 # id 17 is a pre-print, assigned the year 2024 given its year of upload
 
+<<<<<<< HEAD
 # check any missing citation ID 
+=======
+# check any missing citation ID
+>>>>>>> 8512b7702bba0a471be6a0c9924971ab82ac66fc
 idchk_seq <- eb_dt_year$id
 idchk_seq2 <- min(eb_dt_year$id):max(eb_dt_year$id)
 idchk_seq2[!idchk_seq2 %in% idchk_seq]
@@ -96,13 +106,17 @@ ebd <- ebd_join_complete %>%
 
 View(ebd)
 
+<<<<<<< HEAD
 # fix formatting of year column
+=======
+>>>>>>> 8512b7702bba0a471be6a0c9924971ab82ac66fc
 ebd$year <- as.Date(ebd$year,
                     format = "%Y")
 ebd$year <- year(ebd$year)
 
 str(ebd)
 
+<<<<<<< HEAD
 # optionally turn into factor in case of issues of ordering of cumulative numbers
 # ebd$year <- as.factor(ebd$year)
 
@@ -115,6 +129,9 @@ ebd %>%
   select(-id) %>% 
   unique() %>% 
   View()
+=======
+ebd$year <- as.factor(ebd$year)
+>>>>>>> 8512b7702bba0a471be6a0c9924971ab82ac66fc
 
 # Plotting ----
 
@@ -128,6 +145,7 @@ pub_years <- ebd %>%
   mutate(pub_count = n()) %>% 
   select(-id) %>% 
   unique()
+<<<<<<< HEAD
 
 View(pub_years)
 
@@ -151,3 +169,23 @@ ggplot(pub_cumsum,aes(year,pub_cumsum, group = category, colour = category)) +
        y = "Cumulative number of publications")+
   theme_classic()
 
+=======
+
+View(pub_years)
+
+pub_cumsum <- pub_years %>% 
+  ungroup() %>% 
+  group_by(category) %>% 
+  mutate(pub_cumsum = cumsum(pub_count))
+
+View(pub_cumsum)
+
+# tweaks variable declarations
+lwd = 1
+
+# Yearwise publication trends by categories - cumulative
+ggplot(pub_cumsum,aes(year,pub_cumsum,group = category, colour = category)) +
+  geom_line(linewidth = lwd)+
+  labs(x = "Year of Publication", y = "Number of publications")+
+  theme_classic()
+>>>>>>> 8512b7702bba0a471be6a0c9924971ab82ac66fc
