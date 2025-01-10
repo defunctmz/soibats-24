@@ -39,7 +39,7 @@ View(eb_dt_location)
 # check for duplicated entries
 
 nrow(eb_dt_location)
-eb_dt_location[which(duplicated(eb_dt_location$id)),]
+View(eb_dt_location[which(duplicated(eb_dt_location$id)),])
 nrow(eb_dt_location) - count(eb_dt_location[which(duplicated(eb_dt_location$id)),])
 
 # check for missing citation IDs
@@ -70,7 +70,6 @@ eb_dt_year$year <- format(as.Date(eb_dt_year$year,
                           "%Y") ; View(eb_dt_year)
 
 # id 17 is a pre-print, assigned the year 2024 given its year of upload
-
 
 # check any missing citation ID 
 
@@ -172,11 +171,24 @@ pub_cumsum <- pub_years %>%
 
 View(pub_cumsum)
 
-# tweaks variable declarations
+# tweaks - variable declarations ----
 lwd = 1
 
-# Yearwise publication trends by categories - cumulative
+# Year-wise publication trends by categories - cumulative
 ggplot(pub_cumsum,aes(year,pub_cumsum,group = category, colour = category)) +
   geom_line(linewidth = lwd)+
-  labs(x = "Year of Publication", y = "Number of publications")+
+  labs(x = "Year of Publication", y = "Cumulative number of publications")+
   theme_classic()
+
+# State-wise heatmap (hm) - formatting data for QGIS - state names made to match the shapefile names
+eb_hmdt <- eb_dt_location %>% 
+  select(id,location) %>% 
+  group_by(location) %>% 
+  mutate(pub_count = n()) %>% 
+  select(-id) %>% 
+  unique() %>%
+  arrange(desc(pub_count)) %>% 
+  mutate(location = str_replace_all(location,"\\."," ")) %>%
+  mutate(location = str_replace_all(location,"Andaman and Nicobar Islands", "Andaman & Nicobar")) %>% 
+  write_csv("eb_heatmap_dt.csv")
+
