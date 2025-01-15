@@ -192,3 +192,46 @@ eb_hmdt <- eb_dt_location %>%
   mutate(location = str_replace_all(location,"Andaman and Nicobar Islands", "Andaman & Nicobar")) %>% 
   write_csv("eb_heatmap_dt.csv")
 
+# Ecosystem services group
+a <- read_csv(file.choose())
+
+bat_diet_long <- a %>%
+  mutate(Diet = strsplit(Diet, ",\\s*")) %>%  # Split the Diet column by commas
+  unnest(Diet) %>%  # Expand into multiple rows
+  mutate(Diet = trimws(Diet))  # Remove surrounding whitespace from Diet values
+
+# Step 3: Add Genera Column
+bat_diet_long <- bat_diet_long %>%
+  mutate(Genera = word(Diet, 1))  # Extract Genera (first word from Diet)
+# file check and write
+p_dt <- bat_diet_long
+
+# remove sp. and similar suffixes as well as whitespace char
+#  \\s+ is more than one whitespace, plus is for more than one
+#  \\w is one, or more characters when paired with *
+#  \\. is for period
+#  | is OR condition
+#  $ checks for the string being at the end only
+p_dt$Diet <- str_remove_all(p_dt$Diet, "\\s+sp\\.$|\\s+sp\\w$")
+p_dt$Diet <- str_remove_all(p_dt$Diet, "\\s+spp\\.$")
+p_dt$Diet <- str_remove_all(p_dt$Diet, "D4")
+p_dt$Diet <- str_remove_all(p_dt$Diet, "\\s+sp$")
+
+
+compare <- cbind(p_dt,bat_diet_long)
+colnames(compare) <- c("sp1","diet1","g1","sp2","diet2","g2")
+compare <- compare %>% 
+  select(diet1,diet2)
+
+View(compare)
+
+sp_list <- compare %>% 
+  mutate(id = seq(1:nrow(compare))) %>% 
+  select(id,diet1) %>%  # edited coloumn
+  distinct(diet1,.keep_all = T)
+
+colnames(sp_list) <- c("id","species") 
+
+write_csv(sp_list,
+          "soibats_es_pt_dietls_15012025.csv",
+          col_names = T)
