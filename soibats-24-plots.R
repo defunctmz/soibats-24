@@ -1,6 +1,12 @@
 # Packages ----
 install.packages("pacman")
-pacman::p_load(pacman,tidyverse,lubridate)
+pacman::p_load(pacman,
+               tidyverse,
+               lubridate,
+               igraph,
+               tidygraph,
+               ggraph,
+               ggrepel)
 
 # EB group - Overall - Data cleaning ----
 
@@ -192,19 +198,18 @@ eb_hmdt <- eb_dt_location %>%
   mutate(location = str_replace_all(location,"Andaman and Nicobar Islands", "Andaman & Nicobar")) %>% 
   write_csv("eb_heatmap_dt.csv")
 
-# Ecosystem services group
-a <- read_csv(file.choose())
+# Ecosystem services network - Data clean up ----
 
-bat_diet_long <- a %>%
+# pteropotid network clean up ----
+pt_dt <- read_csv(file.choose())
+
+p_diet_long <- pt_dt %>%
   mutate(Diet = strsplit(Diet, ",\\s*")) %>%  # Split the Diet column by commas
   unnest(Diet) %>%  # Expand into multiple rows
   mutate(Diet = trimws(Diet))  # Remove surrounding whitespace from Diet values
 
-# Step 3: Add Genera Column
-bat_diet_long <- bat_diet_long %>%
-  mutate(Genera = word(Diet, 1))  # Extract Genera (first word from Diet)
 # file check and write
-p_dt <- bat_diet_long
+p_dt <- p_diet_long
 
 # remove sp. and similar suffixes as well as whitespace char
 #  \\s+ is more than one whitespace, plus is for more than one
@@ -218,8 +223,8 @@ p_dt$Diet <- str_remove_all(p_dt$Diet, "D4")
 p_dt$Diet <- str_remove_all(p_dt$Diet, "\\s+sp$")
 
 
-compare <- cbind(p_dt,bat_diet_long)
-colnames(compare) <- c("sp1","diet1","g1","sp2","diet2","g2")
+compare <- cbind(p_dt,p_diet_long)
+colnames(compare) <- c("sp1","diet1","sp2","diet2")
 compare <- compare %>% 
   select(diet1,diet2)
 
@@ -235,3 +240,82 @@ colnames(sp_list) <- c("id","species")
 write_csv(sp_list,
           "soibats_es_pt_dietls_15012025.csv",
           col_names = T)
+
+# non pteropotid network - clean up ----
+npt_dt <- read_csv(file.choose())
+
+str(npt_dt)  # Check the structure of the dataset
+
+# long from diet entries
+npt_diet_long <- npt_dt %>%
+  mutate(Diet = strsplit(Diet, ",\\s*")) %>%  # Split the Diet column by commas
+  unnest(Diet) %>%  # Expand into multiple rows
+  mutate(Diet = trimws(Diet))  # Remove surrounding whitespace from Diet values
+
+# prep for igraph format
+npt_dt <- data.frame(sp = npt_diet_long$Species,
+                     diet = npt_diet_long$Diet)
+
+# ggraph plots ----
+
+npt_graph <- tbl_graph(edges = npt_dt, directed = F)
+
+npt_graph <- npt_graph %>% 
+  mutate(type = ifelse(name %in% npt_dt$sp, "Bat", "Prey"),
+         size = centrality_degree())
+
+# check for size attribute being correctly calculated
+npt_dt %>%
+  group_by(diet) %>% 
+  mutate(count = n()) %>% 
+  arrange(desc(count)) %>% 
+  distinct(diet,.keep_all = T)
+
+# check graph object for size attribute, compare with above
+npt_nodes <- as_tibble(npt_graph, active = "nodes") ; View(npt_nodes)
+
+# additional edges check
+npt_edges <- as_tibble(npt_graph, active = "edges") ; View(npt_edges)
+
+### clustering groups - only for testing
+communities <- cluster_fast_greedy(as.igraph(npt_graph))  # Detect communities
+npt_graph <- npt_graph %>%
+  mutate(cluster = as.factor(membership(communities)))
+###
+
+# layout to make nodes with higher centrality plotted towards the center of the graph
+layout_centrality <- layout_with_kk(as.igraph(npt_graph),
+                                    weights = E(as.igraph(npt_graph))$weight)
+
+# visual vars ----
+
+layout = layout_centrality
+labelsize = 4
+edgecol = "gray" ; edgewd = 0.8 ; edgealpha = 0.1
+batshp = 16 ; batcol = "turquoise"
+preyshp = 1 ; preycol = "purple"
+node_sizerange = c(2,8)
+title = "Non-pteropotid Bats and prey network (Node Size = Number of Connections)"
+
+# plot
+ggraph(npt_graph,
+       layout = layout) +
+  geom_edge_link(aes(edge_alpha = edgealpha),
+                 color = edgecol,
+                 width = edgewd,
+                 show.legend = F) +
+  geom_node_point(aes(color = cluster, # color by type, bat or prey
+                      size = size, # size by number of connections
+                      shape = type)) +  # shape by cluster
+  geom_node_text(aes(label = name), # label by name
+                 repel = T,
+                 size = labelsize) +
+  # scale_shape_manual(values = c("Bat" = batshp,
+  #                               "Prey" = preyshp)) +
+  # scale_color_manual(values = c("Bat" = batcol,
+  #                               "Prey" = preycol)) +
+  scale_size_continuous(range = node_sizerange,
+                        guide = "none") + # Adjust node size scale 
+  ggtitle(title) +
+  theme_void()
+  
