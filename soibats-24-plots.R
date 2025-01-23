@@ -319,3 +319,38 @@ ggraph(npt_graph,
   ggtitle(title) +
   theme_void()
   
+# Taxonomy -----
+
+# randomly generated data as a demo
+tx_dt <- tibble(year = rep(seq(1950,2024,1),3),
+                sp_count = sample(1:1,
+                                  NROW(seq(1950,2024,1))*3,
+                                  replace = T),
+                sp_group = sample(LETTERS[1:3],
+                                  NROW(seq(1950,2024,1))*3,
+                                  replace = T))
+
+View(tx_dt)
+
+tx_dt_csum <- tx_dt %>% 
+  group_by(year,sp_group) %>% 
+  mutate(sp_total = sum(sp_count)) %>% 
+  select(-sp_count) %>% 
+  unique() %>% 
+  ungroup() %>% 
+  group_by(sp_group) %>% 
+  arrange(year) %>% 
+  mutate(cumsum = cumsum(sp_total))
+
+# vars   
+lwd = 0.8
+
+# plot
+
+ggplot(tx_dt_csum,aes(year,
+                      cumsum,
+                      group = sp_group,
+                      colour = sp_group)) +
+  geom_line(linewidth = lwd)+
+  labs(x = "Year", y = "cumulative number of species described")+
+  theme_classic()
