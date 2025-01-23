@@ -133,7 +133,7 @@ ebd %>%
 
 ebd$year <- as.factor(ebd$year)
 
-# Plotting ----
+# plotting ----
 
 # Cumulative number of citations by categories
 
@@ -158,7 +158,7 @@ View(pub_cumsum)
 # check pub_cumsum endpoint totals match that of category wise citations totals, code available above 
 
 
-# Variable declarations for tweaks ----
+# variable declarations for tweaks ----
 lwd = 1
 
 # plot 
@@ -186,7 +186,7 @@ ggplot(pub_cumsum,aes(year,pub_cumsum,group = category, colour = category)) +
   labs(x = "Year of Publication", y = "Cumulative number of publications")+
   theme_classic()
 
-# State-wise heatmap (hm) - formatting data for QGIS - state names made to match the shapefile names
+# State-wise heatmap (hm) - formatting data for QGIS - state names made to match the shapefile names ----
 eb_hmdt <- eb_dt_location %>% 
   select(id,location) %>% 
   group_by(location) %>% 
@@ -200,8 +200,8 @@ eb_hmdt <- eb_dt_location %>%
 
 # Ecosystem services network - Data clean up ----
 
-# pteropotid network clean up ----
-pt_dt <- read_csv(file.choose())
+# Pteropotid network clean up ----
+pt_dt <- read_csv(file.choose()) # use file named "Pteropodid_v1_20250111.csv" here
 
 p_diet_long <- pt_dt %>%
   mutate(Diet = strsplit(Diet, ",\\s*")) %>%  # Split the Diet column by commas
@@ -222,26 +222,184 @@ p_dt$Diet <- str_remove_all(p_dt$Diet, "\\s+spp\\.$")
 p_dt$Diet <- str_remove_all(p_dt$Diet, "D4")
 p_dt$Diet <- str_remove_all(p_dt$Diet, "\\s+sp$")
 
-
 compare <- cbind(p_dt,p_diet_long)
+
 colnames(compare) <- c("sp1","diet1","sp2","diet2")
+
 compare <- compare %>% 
   select(diet1,diet2)
 
 View(compare)
 
-sp_list <- compare %>% 
-  mutate(id = seq(1:nrow(compare))) %>% 
+sp_list <- compare %>%
+  mutate(id = seq(1:nrow(compare))) %>%
   select(id,diet1) %>%  # edited coloumn
   distinct(diet1,.keep_all = T)
 
-colnames(sp_list) <- c("id","species") 
+colnames(sp_list) <- c("id","species")
 
 write_csv(sp_list,
           "soibats_es_pt_dietls_15012025.csv",
           col_names = T)
 
-# non pteropotid network - clean up ----
+# updated lists and merging revised data ----
+# some part of this is a repeated code, to maintain flow and ease reruns on different systems
+
+pt_dt <- read_csv(file.choose()) # use file named "Pteropodid_v1_20250111.csv" here
+
+p_diet_long <- pt_dt %>%
+  mutate(Diet = strsplit(Diet, ",\\s*")) %>%  # Split the Diet column by commas
+  unnest(Diet) %>%  # Expand into multiple rows
+  mutate(Diet = trimws(Diet))  # Remove surrounding whitespace from Diet values
+
+# file check and write
+p_dt <- p_diet_long
+
+# remove sp. and similar suffixes as well as whitespace char
+#  \\s+ is more than one whitespace, plus is for more than one
+#  \\w is one, or more characters when paired with *
+#  \\. is for period
+#  | is OR condition
+#  $ checks for the string being at the end only
+p_dt$Diet <- str_remove_all(p_dt$Diet, "\\s+sp\\.$|\\s+sp\\w$")
+p_dt$Diet <- str_remove_all(p_dt$Diet, "\\s+spp\\.$")
+p_dt$Diet <- str_remove_all(p_dt$Diet, "D4")
+p_dt$Diet <- str_remove_all(p_dt$Diet, "\\s+sp$")
+
+compare <- cbind(p_dt,p_diet_long)
+
+colnames(compare) <- c("sp1","diet1","sp2","diet2")
+
+sp_list <- compare %>%
+  mutate(id = seq(1:nrow(compare))) %>% 
+  select(id,sp1,diet1) %>%  # edited coloumn
+  distinct(diet1,sp1,.keep_all = T) # id assigning for each row
+
+pt_dt_rev <- read_csv(file.choose()) # use file name "soibats_es_pt_dietls_23012025.csv" here
+
+# join the dataset using the old species name and connect the new species names - genera name isolation was done externally
+
+pt_dt_rev_merge <- full_join(sp_list,
+                             pt_dt_rev,
+                             by = join_by(diet1 == species),
+                             multiple = "all",
+                             relationship = "many-to-many",
+                             keep = T)
+
+# check duplicated rows in the original dataset
+dupli_df <- p_dt[which(duplicated(p_dt)),]
+View(dupli_df)
+
+# check the correct number of duplicated rows are out in the merged dataset
+nrow(p_dt)-nrow(dupli_df)
+
+rm(dupli_df)
+
+
+# clean up dataframe
+pt_dt_v2 <- pt_dt_rev_merge %>% 
+  select(-id.y,
+         -species) %>% 
+  distinct(sp1,
+           sp_update,
+           .keep_all = T)
+
+# readable colnames
+colnames(pt_dt_v2) <- c("id","sp","diet_old","diet","diet_genus")
+
+# reorder cols
+pt_dt_v2 <- pt_dt_v2 %>% 
+  select(id,sp,diet,diet_genus,diet_old)
+
+View(pt_dt_v2)
+
+# network data formatting ----
+pt_dt_v2_genera <- pt_dt_v2 %>% 
+  drop_na() %>% 
+  select(sp,diet_genus) %>% 
+  unique()
+
+View(pt_dt_v2_genera)
+
+# calculate quick numbers for species and diet genera - ignore
+pt_dt_stats <- pt_dt_v2 %>% 
+  drop_na() %>% 
+  select(sp,diet_genus) %>% 
+  unique() %>% 
+  group_by(sp) %>% 
+  mutate(diet_genera_count = n()) %>% 
+  select(-diet_genus) %>% 
+  unique() %>% 
+  arrange(desc(diet_genera_count))
+
+View(pt_dt_stats)
+
+# ggraph plots ----
+
+pt_graph <- tbl_graph(edges = pt_dt_v2_genera, directed = F)
+
+pt_graph <- pt_graph %>% 
+  mutate(type = ifelse(name %in% pt_dt_v2_genera$sp, "Bat", "Prey"),
+         size = centrality_degree())
+
+# check for size attribute being correctly calculated
+pt_dt_v2_genera %>%
+  group_by(diet_genus) %>% 
+  mutate(count = n()) %>% 
+  arrange(desc(count)) %>% 
+  distinct(diet_genus,.keep_all = T)
+
+# check graph object for size attribute, compare with above
+pt_nodes <- as_tibble(pt_graph, active = "nodes") ; View(pt_nodes)
+
+# additional edges check
+pt_edges <- as_tibble(pt_graph, active = "edges") ; View(pt_edges)
+
+### clustering groups - only for testing
+pt_communities <- cluster_fast_greedy(as.igraph(pt_graph))  # Detect communities
+
+pt_graph <- pt_graph %>%
+  mutate(cluster = as.factor(membership(pt_communities)))
+###
+
+# layout to make nodes with higher centrality plotted towards the center of the graph
+layout_centrality <- layout_with_kk(as.igraph(pt_graph),
+                                    weights = E(as.igraph(pt_graph))$weight)
+
+# visual vars ----
+
+layout = layout_centrality
+labelsize = 4
+edgecol = "gray" ; edgewd = 0.8 ; edgealpha = 0.1
+batshp = 16 ; batcol = "turquoise"
+preyshp = 1 ; preycol = "purple"
+node_sizerange = c(2,8)
+title = "Pteropotid Bats and prey network (Node Size = Number of Connections)"
+
+# plot
+ggraph(pt_graph,
+       layout = layout) +
+  geom_edge_link(aes(edge_alpha = edgealpha),
+                 color = edgecol,
+                 width = edgewd,
+                 show.legend = F) +
+  geom_node_point(aes(color = cluster, # color by type, bat or prey
+                      size = size, # size by number of connections
+                      shape = type)) +  # shape by cluster
+  geom_node_text(aes(label = name), # label by name
+                 repel = T,
+                 size = labelsize) +
+  # scale_shape_manual(values = c("Bat" = batshp,
+  #                               "Prey" = preyshp)) +
+  # scale_color_manual(values = c("Bat" = batcol,
+  #                               "Prey" = preycol)) +
+  scale_size_continuous(range = node_sizerange,
+                        guide = "none") + # Adjust node size scale 
+  ggtitle(title) +
+  theme_void()
+
+
+# Non pteropotid network - clean up ----
 npt_dt <- read_csv(file.choose())
 
 str(npt_dt)  # Check the structure of the dataset
