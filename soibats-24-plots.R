@@ -512,3 +512,51 @@ ggplot(tx_dt_csum,aes(year,
   geom_line(linewidth = lwd)+
   labs(x = "Year", y = "cumulative number of species described")+
   theme_classic()
+
+# Citizen Science ----
+
+# Data clean up ----
+
+# IBP data
+
+ibp_raw <- read_csv(file.choose()) # use file name "IBP-withmedia-raw-24012025.csv" here
+
+ibp_dt <- ibp_raw %>% 
+  select(catalogNumber,
+         locationLat,
+         locationLon,
+         rank,
+         scientificName,
+         order:genus) %>% 
+  mutate(database = "ibp")
+
+# iNat data
+
+inat_raw <- read_csv(file.choose()) # use file name "Inat-raw-24012025.csv" here
+
+inat_dt <- inat_raw %>% 
+  select(id,
+         quality_grade,
+         latitude,
+         longitude,
+         scientific_name,
+         taxon_id) %>% 
+  mutate(database = "inat")
+
+csci_occ_dt <- bind_rows(ibp_dt,inat_dt)
+
+csci_occ_dt <- csci_occ_dt %>% 
+  mutate(id = if_else(database == "ibp",catalogNumber,id)) %>% 
+  mutate(latitude = if_else(database == "ibp", locationLat,latitude)) %>% 
+  mutate(longitude = if_else(database == "ibp",locationLon,longitude)) %>% 
+  mutate(scientific_name = if_else(database == "ibp",scientificName,scientific_name)) %>% 
+  select(database,
+         id,
+         latitude,
+         longitude,
+         scientific_name,
+         rank,
+         taxon_id)
+
+write_csv(csci_occ_dt,"csci_occ_dt_27012025.csv")
+s
