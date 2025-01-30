@@ -6,7 +6,8 @@ pacman::p_load(pacman,
                igraph,
                tidygraph,
                ggraph,
-               ggrepel)
+               ggrepel,
+               oaqc)
 
 # EB group - Overall - Data cleaning ----
 
@@ -22,7 +23,7 @@ View(eb_basedt)
 eb_basedt <- eb_basedt %>% 
   mutate(id = seq.int(1,nrow(eb_basedt),1))
 
-# long form categories ----
+## long form categories ----
 eb_dt_cat <- eb_basedt %>%
   select(citation:Toxicology,id) %>% 
   pivot_longer(cols = Diet:Toxicology,
@@ -32,7 +33,7 @@ eb_dt_cat <- eb_basedt %>%
 eb_dt_cat[which(duplicated(eb_dt_cat$id)),]
 
 View(eb_dt_cat)
-# long form states (location) ----
+## long form states (location) ----
 eb_dt_location <- eb_basedt %>% 
   select(citation,Andaman.and.Nicobar.Islands:West.Bengal,id) %>% 
   pivot_longer(cols = Andaman.and.Nicobar.Islands:West.Bengal,
@@ -62,7 +63,7 @@ idchk_seq2[!idchk_seq2 %in% idchk_seq]
 
 # missing are OK for eb_citations_data_v2, location not applicable for missing IDs
 
-# long form year of study ----
+## long form year of study ----
 eb_dt_year <- eb_basedt %>% 
   select(citation,...2024:id) %>% 
   pivot_longer(cols = ...2024:...1960,
@@ -87,7 +88,7 @@ idchk_seq2[!idchk_seq2 %in% idchk_seq]
 
 # desired output of above chunk is integer[0]; If any are missing, those IDs will show instead. Year should not be missing for citations
 
-# join tables - id column is key ----
+## join tables - id column is key ----
 
 ebd_join_catloc <- full_join(eb_dt_cat,eb_dt_location,"id")
 ebd_join_catloc <- ebd_join_catloc %>% select(id,citation.x,category,location)
@@ -133,7 +134,7 @@ ebd %>%
 
 ebd$year <- as.factor(ebd$year)
 
-# plotting ----
+## plotting ----
 
 # Cumulative number of citations by categories
 
@@ -158,7 +159,7 @@ View(pub_cumsum)
 # check pub_cumsum endpoint totals match that of category wise citations totals, code available above 
 
 
-# variable declarations for tweaks ----
+## variable declarations for tweaks ----
 lwd = 1
 
 # plot 
@@ -177,7 +178,7 @@ pub_cumsum <- pub_years %>%
 
 View(pub_cumsum)
 
-# tweaks - variable declarations ----
+# tweaks - variable declarations
 lwd = 1
 
 # Year-wise publication trends by categories - cumulative
@@ -200,7 +201,7 @@ eb_hmdt <- eb_dt_location %>%
 
 # Ecosystem services network - Data clean up ----
 
-# Pteropotid network clean up ----
+## Pteropotid network clean up ----
 pt_dt <- read_csv(file.choose()) # use file named "Pteropodid_v1_20250111.csv" here
 
 p_diet_long <- pt_dt %>%
@@ -242,7 +243,7 @@ write_csv(sp_list,
           "soibats_es_pt_dietls_15012025.csv",
           col_names = T)
 
-# updated lists and merging revised data ----
+## updated lists and merging revised data ----
 # some part of this is a repeated code, to maintain flow and ease reruns on different systems
 
 pt_dt <- read_csv(file.choose()) # use file named "Pteropodid_v1_20250111.csv" here
@@ -275,6 +276,7 @@ sp_list <- compare %>%
   select(id,sp1,diet1) %>%  # edited coloumn
   distinct(diet1,sp1,.keep_all = T) # id assigning for each row
 
+
 pt_dt_rev <- read_csv(file.choose()) # use file name "soibats_es_pt_dietls_23012025.csv" here
 
 # join the dataset using the old species name and connect the new species names - genera name isolation was done externally
@@ -291,10 +293,11 @@ dupli_df <- p_dt[which(duplicated(p_dt)),]
 View(dupli_df)
 
 # check the correct number of duplicated rows are out in the merged dataset
+nrow(p_dt)
+nrow(dupli_df)
 nrow(p_dt)-nrow(dupli_df)
 
 rm(dupli_df)
-
 
 # clean up dataframe
 pt_dt_v2 <- pt_dt_rev_merge %>% 
@@ -313,7 +316,7 @@ pt_dt_v2 <- pt_dt_v2 %>%
 
 View(pt_dt_v2)
 
-# network data formatting ----
+# network data formatting
 pt_dt_v2_genera <- pt_dt_v2 %>% 
   drop_na() %>% 
   select(sp,diet_genus) %>% 
@@ -334,12 +337,12 @@ pt_dt_stats <- pt_dt_v2 %>%
 
 View(pt_dt_stats)
 
-# ggraph plots ----
+## ggraph plots -----
 
 pt_graph <- tbl_graph(edges = pt_dt_v2_genera, directed = F)
 
 pt_graph <- pt_graph %>% 
-  mutate(type = ifelse(name %in% pt_dt_v2_genera$sp, "Bat", "Prey"),
+  mutate(type = ifelse(name %in% pt_dt_v2_genera$sp, "Bat", "Diet"),
          size = centrality_degree())
 
 # check for size attribute being correctly calculated
@@ -355,51 +358,51 @@ pt_nodes <- as_tibble(pt_graph, active = "nodes") ; View(pt_nodes)
 # additional edges check
 pt_edges <- as_tibble(pt_graph, active = "edges") ; View(pt_edges)
 
-### clustering groups - only for testing
-pt_communities <- cluster_fast_greedy(as.igraph(pt_graph))  # Detect communities
+# ### clustering groups - only for testing
+# pt_communities <- cluster_fast_greedy(as.igraph(pt_graph))  # Detect communities
+# 
+# pt_graph <- pt_graph %>%
+#   mutate(cluster = as.factor(membership(pt_communities)))
 
-pt_graph <- pt_graph %>%
-  mutate(cluster = as.factor(membership(pt_communities)))
-###
 
 # layout to make nodes with higher centrality plotted towards the center of the graph
+set.seed(0)
 layout_centrality <- layout_with_kk(as.igraph(pt_graph),
                                     weights = E(as.igraph(pt_graph))$weight)
 
-# visual vars ----
+## visual vars ----
 
 layout = layout_centrality
 labelsize = 4
-edgecol = "gray" ; edgewd = 0.8 ; edgealpha = 0.1
-batshp = 16 ; batcol = "turquoise"
-preyshp = 1 ; preycol = "purple"
-node_sizerange = c(2,8)
-title = "Pteropotid Bats and prey network (Node Size = Number of Connections)"
+edgecol = "lightgray" ; edgewd = 0.6 ; edgealpha = 0.2
+batshp = 17 ; batcol = "turquoise"
+dietshp = 16 ; dietcol = "violet"
+node_sizerange = c(2,6)
+title = "Pteropotid Bats and diet network (Node Size = Number of Connections)"
 
-# plot
+## plot ----
 ggraph(pt_graph,
        layout = layout) +
   geom_edge_link(aes(edge_alpha = edgealpha),
                  color = edgecol,
                  width = edgewd,
                  show.legend = F) +
-  geom_node_point(aes(color = cluster, # color by type, bat or prey
+  geom_node_point(aes(color = type, # color by type, bat or prey
                       size = size, # size by number of connections
                       shape = type)) +  # shape by cluster
   geom_node_text(aes(label = name), # label by name
                  repel = T,
                  size = labelsize) +
-  # scale_shape_manual(values = c("Bat" = batshp,
-  #                               "Prey" = preyshp)) +
-  # scale_color_manual(values = c("Bat" = batcol,
-  #                               "Prey" = preycol)) +
+  scale_shape_manual(values = c("Bat" = batshp,
+                                 "Diet" = dietshp)) +
+  scale_color_manual(values = c("Bat" = batcol,
+                                "Diet" = dietcol)) +
   scale_size_continuous(range = node_sizerange,
                         guide = "none") + # Adjust node size scale 
   ggtitle(title) +
   theme_void()
 
-
-# Non pteropotid network - clean up ----
+## Non pteropotid network - clean up ----
 npt_dt <- read_csv(file.choose())
 
 str(npt_dt)  # Check the structure of the dataset
@@ -414,7 +417,7 @@ npt_diet_long <- npt_dt %>%
 npt_dt <- data.frame(sp = npt_diet_long$Species,
                      diet = npt_diet_long$Diet)
 
-# ggraph plots ----
+## ggraph plots ----
 
 npt_graph <- tbl_graph(edges = npt_dt, directed = F)
 
@@ -442,20 +445,20 @@ npt_graph <- npt_graph %>%
 ###
 
 # layout to make nodes with higher centrality plotted towards the center of the graph
-layout_centrality <- layout_with_kk(as.igraph(npt_graph),
+npt_layout_centrality <- layout_with_kk(as.igraph(npt_graph),
                                     weights = E(as.igraph(npt_graph))$weight)
 
-# visual vars ----
+## visual vars ----
 
-layout = layout_centrality
+layout = npt_layout_centrality
 labelsize = 4
-edgecol = "gray" ; edgewd = 0.8 ; edgealpha = 0.1
+edgecol = "lightgray" ; edgewd = 0.8 ; edgealpha = 0.1
 batshp = 16 ; batcol = "turquoise"
 preyshp = 1 ; preycol = "purple"
 node_sizerange = c(2,8)
 title = "Non-pteropotid Bats and prey network (Node Size = Number of Connections)"
 
-# plot
+## plot ----
 ggraph(npt_graph,
        layout = layout) +
   geom_edge_link(aes(edge_alpha = edgealpha),
@@ -477,9 +480,109 @@ ggraph(npt_graph,
   ggtitle(title) +
   theme_void()
   
+### Revised NPT dataset ----
+
+unique(npt_dt$diet)
+
+# replace non insect diet items to grouped taxa
+npt_dt_v2 <- npt_dt
+
+# replace spiders with arachnida
+npt_dt_v2$diet <- gsub("\\w*Spider$", "Arachnida", npt_dt_v2$diet)
+
+# check correctly replaced
+which(grepl("Spider",npt_dt$diet))
+which(grepl("Arachnida",npt_dt_v2$diet))
+
+# replace mites with arachnida
+npt_dt_v2$diet <- gsub("\\w*mites$", "Arachnida",npt_dt_v2$diet)
+
+# check correctly replaced
+which(grepl("mites",npt_dt$diet))
+which(grepl("Arachnida",npt_dt_v2$diet))
+
+# replace non_insect items with vertebrata
+
+# check remaining "Non" items
+which(grepl("Non",npt_dt_v2$diet))
+
+# replace
+npt_dt_v2$diet <- gsub("Vertebrata.\\w*.\\w*.\\w*.\\w*", "Vertebrata",npt_dt_v2$diet)
+
+# check same indices replaced
+which(grepl("Vertebrata",npt_dt_v2$diet))
+
+npt_dt_v2
+
+# check all replacements are correct
+cbind(npt_dt$diet,npt_dt_v2$diet) %>% 
+View()
+
+# write updated file
+write_csv(npt_dt_v2,"soibats_es_npt_dietls_v2_30012025.csv")
+
+### graph ----
+
+npt_dt_v2 <- read_csv(file.choose()) # choose "soibats_es_npt_dietls_v2_30012025.csv"
+ 
+npt_graph <- tbl_graph(edges = npt_dt_v2, directed = F)
+
+npt_graph <- npt_graph %>% 
+  mutate(type = ifelse(name %in% npt_dt_v2$sp, "Bat", "Diet"),
+         size = centrality_degree())
+
+# check for size attribute being correctly calculated
+npt_dt_v2 %>%
+  group_by(diet) %>% 
+  mutate(count = n()) %>% 
+  arrange(desc(count)) %>% 
+  distinct(diet,.keep_all = T)
+
+# check graph object for size attribute, compare with above
+npt_nodes <- as_tibble(npt_graph, active = "nodes") ; View(npt_nodes)
+
+# additional edges check
+npt_edges <- as_tibble(npt_graph, active = "edges") ; View(npt_edges)
+
+# layout to make nodes with higher centrality plotted towards the center of the graph
+set.seed(0) 
+npt_layout_centrality <- layout_with_gem(as.igraph(npt_graph))
+
+### visual vars ----
+layout_fixed = npt_layout_centrality
+labelsize = 4
+edgecol = "lightgray" ; edgewd = 0.6 ; edgealpha = 0.2
+batshp = 17 ; batcol = "turquoise"
+dietshp = 16 ; dietcol = "violet"
+node_sizerange = c(1,6)
+title = "Non-pteropotid bats and diet network (Node Size = Number of Connections)"
+
+### plot ----
+
+ggraph(npt_graph,
+       layout = layout_fixed) +
+  geom_edge_link(aes(edge_alpha = edgealpha),
+                 color = edgecol,
+                 width = edgewd,
+                 show.legend = F) +
+  geom_node_point(aes(color = type, # color by type, bat or prey
+                      size = size, # size by number of connections
+                      shape = type)) +  # shape by cluster
+  geom_node_text(aes(label = name), # label by name
+                 repel = T,
+                 size = labelsize) +
+  scale_shape_manual(values = c("Bat" = batshp,
+                                 "Diet" = dietshp)) +
+  scale_color_manual(values = c("Bat" = batcol,
+                                "Diet" = dietcol)) +
+  scale_size_continuous(range = node_sizerange,
+                        guide = "none") + # Adjust node size scale 
+  ggtitle(title) +
+  theme_void()
+
 # Taxonomy -----
 
-# randomly generated data as a demo
+## randomly generated data as a demo ----
 tx_dt <- tibble(year = rep(seq(1950,2024,1),3),
                 sp_count = sample(1:1,
                                   NROW(seq(1950,2024,1))*3,
@@ -500,10 +603,10 @@ tx_dt_csum <- tx_dt %>%
   arrange(year) %>% 
   mutate(cumsum = cumsum(sp_total))
 
-# vars   
+## vars ----   
 lwd = 0.8
 
-# plot
+## plot ----
 
 ggplot(tx_dt_csum,aes(year,
                       cumsum,
@@ -515,9 +618,9 @@ ggplot(tx_dt_csum,aes(year,
 
 # Citizen Science ----
 
-# Data clean up ----
+## Data clean up ----
 
-# IBP data
+## IBP data ----
 
 ibp_raw <- read_csv(file.choose()) # use file name "IBP-withmedia-raw-24012025.csv" here
 
@@ -530,7 +633,7 @@ ibp_dt <- ibp_raw %>%
          order:genus) %>% 
   mutate(database = "ibp")
 
-# iNat data
+## iNat data ----
 
 inat_raw <- read_csv(file.choose()) # use file name "Inat-raw-24012025.csv" here
 
@@ -559,4 +662,3 @@ csci_occ_dt <- csci_occ_dt %>%
          taxon_id)
 
 write_csv(csci_occ_dt,"csci_occ_dt_27012025.csv")
-s
