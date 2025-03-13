@@ -243,8 +243,9 @@ write_csv(sp_list,
           "soibats_es_pt_dietls_15012025.csv",
           col_names = T)
 
+# PT - Revised ----
 ## updated lists and merging revised data ----
-# some part of this is a repeated code, to maintain flow and ease reruns on different systems
+# some part of this is repeated code, to maintain flow and ease of reruns on different systems
 
 pt_dt <- read_csv(file.choose()) # use file named "Pteropodid_v1_20250111.csv" here
 
@@ -366,7 +367,7 @@ pt_edges <- as_tibble(pt_graph, active = "edges") ; View(pt_edges)
 
 
 # layout to make nodes with higher centrality plotted towards the center of the graph
-set.seed(0)
+set.seed(0) # make sure to run set seed with zero before each run for exaact reproduction
 layout_centrality <- layout_with_kk(as.igraph(pt_graph),
                                     weights = E(as.igraph(pt_graph))$weight)
 
@@ -403,7 +404,7 @@ ggraph(pt_graph,
   theme_void()
 
 ## Non pteropotid network - clean up ----
-npt_dt <- read_csv(file.choose())
+npt_dt <- read_csv(file.choose()) 
 
 str(npt_dt)  # Check the structure of the dataset
 
@@ -438,11 +439,11 @@ npt_nodes <- as_tibble(npt_graph, active = "nodes") ; View(npt_nodes)
 # additional edges check
 npt_edges <- as_tibble(npt_graph, active = "edges") ; View(npt_edges)
 
-### clustering groups - only for testing
-communities <- cluster_fast_greedy(as.igraph(npt_graph))  # Detect communities
-npt_graph <- npt_graph %>%
-  mutate(cluster = as.factor(membership(communities)))
-###
+# ### clustering groups - only for testing
+# communities <- cluster_fast_greedy(as.igraph(npt_graph))  # Detect communities
+# npt_graph <- npt_graph %>%
+#   mutate(cluster = as.factor(membership(communities)))
+# ###
 
 # layout to make nodes with higher centrality plotted towards the center of the graph
 npt_layout_centrality <- layout_with_kk(as.igraph(npt_graph),
@@ -480,7 +481,7 @@ ggraph(npt_graph,
   ggtitle(title) +
   theme_void()
   
-### Revised NPT dataset ----
+# NPT Revised ----
 
 unique(npt_dt$diet)
 
@@ -582,39 +583,58 @@ ggraph(npt_graph,
 
 # Taxonomy -----
 
-## randomly generated data as a demo ----
-tx_dt <- tibble(year = rep(seq(1950,2024,1),3),
-                sp_count = sample(1:1,
-                                  NROW(seq(1950,2024,1))*3,
-                                  replace = T),
-                sp_group = sample(LETTERS[1:3],
-                                  NROW(seq(1950,2024,1))*3,
-                                  replace = T))
+## randomly generated data as a demo
+# tx_dt <- tibble(year = rep(seq(1950,2024,1),3),
+#                 sp_count = sample(1:1,
+#                                   NROW(seq(1950,2024,1))*3,
+#                                   replace = T),
+#                 sp_group = sample(LETTERS[1:3],
+#                                   NROW(seq(1950,2024,1))*3,
+#                                   replace = T))
+# 
+# View(tx_dt)
 
-View(tx_dt)
+## read in data ----
+tx_dt <- tibble(read_csv("raw_data_files/taxonomy_13032025.csv"))
+# use file taxonomy_13032025.csv here
 
 tx_dt_csum <- tx_dt %>% 
-  group_by(year,sp_group) %>% 
-  mutate(sp_total = sum(sp_count)) %>% 
-  select(-sp_count) %>% 
-  unique() %>% 
-  ungroup() %>% 
-  group_by(sp_group) %>% 
-  arrange(year) %>% 
-  mutate(cumsum = cumsum(sp_total))
+  mutate(csum = cumsum(sp_count))
 
 ## vars ----   
 lwd = 0.8
-
+col = "darkgreen"
 ## plot ----
 
 ggplot(tx_dt_csum,aes(year,
-                      cumsum,
-                      group = sp_group,
-                      colour = sp_group)) +
-  geom_line(linewidth = lwd)+
-  labs(x = "Year", y = "cumulative number of species described")+
-  theme_classic()
+                      csum)) +
+  annotate(geom = "rect",
+           xmin = -Inf, xmax = 1947,
+           ymin = -Inf, ymax = Inf,
+           fill = "lightgrey", alpha = 0.5) +
+  annotate("text",
+           x = 1850, y = 105,
+           label = "Pre-independence",
+           size = 5, fontface = "bold.italic", alpha = 0.8) +
+  annotate(geom = "rect",
+           xmin = 1947, xmax = 2023,
+           ymin = -Inf, ymax = Inf,
+           fill = "lightblue", alpha = 0.5) +
+  annotate("text",
+           x = 1985, y = 105,
+           label = "Post-independence",
+           size = 5, fontface = "bold.italic", alpha = 0.8) +
+  geom_vline(xintercept = 1947,
+             linetype = "dashed",
+             color = "darkgrey",
+             linewidth = 0.8) +
+  scale_y_continuous(breaks = c(seq(0,150,25))) +
+  scale_x_continuous(breaks = c(seq(1758,2023,50))) +
+    geom_line(linewidth = lwd, col = col) +
+  labs(x = "Year", y = "Cumulative number of species described")+
+  theme_classic() +
+  theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
 
 # Citizen Science ----
 
@@ -648,11 +668,11 @@ inat_dt <- inat_raw %>%
 
 csci_occ_dt <- bind_rows(ibp_dt,inat_dt)
 
-csci_occ_dt <- csci_occ_dt %>% 
-  mutate(id = if_else(database == "ibp",catalogNumber,id)) %>% 
-  mutate(latitude = if_else(database == "ibp", locationLat,latitude)) %>% 
-  mutate(longitude = if_else(database == "ibp",locationLon,longitude)) %>% 
-  mutate(scientific_name = if_else(database == "ibp",scientificName,scientific_name)) %>% 
+csci_occ_dt <- csci_occ_dt %>%
+  mutate(id = if_else(database == "ibp", catalogNumber, id)) %>%
+  mutate(latitude = if_else(database == "ibp", locationLat, latitude)) %>%
+  mutate(longitude = if_else(database == "ibp", locationLon, longitude)) %>%
+  mutate(scientific_name = if_else(database == "ibp", scientificName, scientific_name)) %>%
   select(database,
          id,
          latitude,

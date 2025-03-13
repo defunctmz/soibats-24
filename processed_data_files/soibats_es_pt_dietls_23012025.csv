@@ -1,0 +1,187 @@
+id,species,sp_update,sp_genus
+1,Achras zapota,Manilkara zapota,Manilkara
+2,Albizia labbeck,Albizia lebbeck,Albizia
+3,Albizia saman,Samanea saman,Samanea
+4,Anacardium occidentale,Anacardium occidentale,Anacardium
+5,Annona reticulata,Annona reticulata,Annona
+6,Annona squamosa,Annona squamosa,Annona
+7,Anona reticulata,Annona reticulata,Annona
+8,Archas sapota,Manilkara zapota,Manilkara
+9,Areca catechu,Areca catechu,Areca
+10,Artocarpus chaplasha,Artocarpus chama,Artocarpus
+11,Artocarpus heterophilus,Artocarpus heterophyllus,Artocarpus
+12,Artocarpus heterophyllus,Artocarpus heterophyllus,Artocarpus
+13,Artocarpus integrifolia,Artocarpus integer,Artocarpus
+14,Averrhoa carambola,Averrhoa carambola,Averrhoa
+15,Azadirachta indica,Azadirachta indica,Azadirachta
+16,Azardirachta indica,Azadirachta indica,Azadirachta
+17,Baccaurea ramiflora,Baccaurea ramiflora,Baccaurea
+18,Bassia latifolia,Madhuca longifolia var. latifolia,Madhuca
+19,Bobax ceiba,Bombax ceiba,Bombax
+20,Bombax ceiba,Bombax ceiba,Bombax
+21,Borassus flabellifer,Borassus flabellifer,Borassus
+22,Calophyllum inophyllum,Calophyllum inophyllum,Calophyllum
+23,Calyptranthes cuspidata,Myrcia cuspidata,Myrcia
+24,Capsicum frutensis,Capsicum frutescens ,Capsicum
+25,Carcia papaya,Carica papaya,Carica
+26,Carica papaya,Carica papaya,Carica
+27,Carrica papaya,Carica papaya,Carica
+28,Ceiba pentandra,Ceiba pentandra,Ceiba
+29,Citrullus colocynthis,Citrullus colocynthis,Citrullus
+30,Coccina grandis,Coccinia grandis,Coccinia
+31,Cocos nucifera,Cocos nucifera,Cocos
+32,Coffea arabica,Coffea arabica,Coffea
+33,Achrus zapota,Manilkara zapota,Manilkara
+35,Annoa reticulata,Annona reticulata,Annona
+38,Eucalyptus,Eucalyptus sp,Eucalyptus
+39,Ficus benghalensis,Ficus benghalensis,Ficus
+40,Ficus religiosa,Ficus religiosa,Ficus
+41,Madhuca indica,Madhuca longifolia var. latifolia ,Madhuca
+42,Madhuca latifolia,Madhuca longifolia var. latifolia ,Madhuca
+43,Dillenia indica,Dillenia indica,Dillenia
+44,Elaeocarpus floribundus,Elaeocarpus floribundus,Elaeocarpus
+45,Elaeocarpus sphaericus,Elaeocarpus sphaericus,Elaeocarpus
+46,Erythrina indica,Erythrina variegata L,Erythrina
+47,Erythrina variegata,Erythrina variegata,Erythrina
+49,Eucalyptus teriticornis,Eucalyptus tereticornis,Eucalyptus
+50,Eugenia jambolana,Syzygium cumini,Syzygium
+51,Ficus bengalensis,Ficus benghalensis,Ficus
+53,Ficus benjamina,Ficus benjamina,Ficus
+54,Ficus curtipes,Ficus curtipes Corner,Ficus
+55,Ficus drupacea,Ficus drupacea Thunb.,Ficus
+56,Ficus elastica,Ficus elastica Roxb. ex Hornem.,Ficus
+57,Ficus glomeratus,Ficus minahassae (de Vriese & Teijsm.) Miq.,Ficus
+58,Ficus hispida,Ficus hispida L.f,Ficus
+59,Ficus infectoria,Ficus lacor Buch.-Ham.,Ficus
+60,Ficus microcarpa,Ficus microcarpa L.f.,Ficus
+61,Ficus racemosa,Ficus racemosa L.,Ficus
+63,Ficus reticulata,Ficus reticulata,Ficus
+64,Ficus retusa,Ficus retusa L.,Ficus
+65,Ficus,Ficus Tourn. ex L.,Ficus
+67,Ficus virens,Ficus virens Aiton,Ficus
+68,Flacourtia jangomas,Flacourtia jangomas (Lour.) Raeusch.,Flacourtia
+69,Grevillea robusta,Grevillea robusta A.Cunn. ex R.Br.,Grevillea
+70,Haldina cardifolia,Adina cordifolia (Roxb.) Hook.f. & Benth.,Adina
+71,Lannea coromondelica,Lannea coromandelica (Houtt.) Merr.,Lannea
+72,Litchi chinensis,Litchi chinensis Sonn.,Litchi
+74,Mangifera indica,Mangifera indica L.,Mangifera
+75,Manicra achras,Manilkara zapota (L.) P.Royen,Manilkara
+76,Manilkara zapota,Manilkara zapota (L.) P.Royen,Manilkara
+77,Melia azedarach,Azadirachta indica A.Juss.,Azadirachta
+78,Mimordica,Momordica charantia L.,Momordica
+79,Mimusops elengi,Mimusops elengi L.,Mimusops
+80,Momordica charantia,Momordica charantia L.,Momordica
+81,Murraya koenigii,Bergera koenigii L.,Bergera
+82,Musa acuminata,Musa acuminata Colla,Musa
+83,Musa balbisiana,Musa balbisiana Colla,Musa
+84,Musa champa,Musa × paradisiaca L.,Musa
+85,Musa paradisiaca,Musa × paradisiaca L.,Musa
+86,Musa sapientum,Musa × paradisiaca L.,Musa
+87,Musa velutina,Musa velutina H.Wendl. & Drude,Musa
+88,Neolamarckia cadamba,Neolamarckia cadamba (Roxb.) Bosser,Neolamarckia
+89,Parkia biglandulosa,Parkia biglandulosa Wight & Arn.,Parkia
+90,Phoenix dactylifera,Phoenix dactylifera L.,Phoenix
+91,Pithecellobium dulce,Pithecellobium dulce (Roxb.) Benth.,Pithecellobium
+92,Pithecolobium dulsi,Pithecellobium dulce (Roxb.) Benth.,Pithecellobium
+93,Polyalthia latifolia,Monoon lateriflorum (Blume) Miq.,Monoon
+94,Polyalthia longifolia,Monoon longifolium (Sonn.) B.Xue & R.M.K.Saunders,Monoon
+95,Polyalthiya longifolia,Monoon longifolium (Sonn.) B.Xue & R.M.K.Saunders,Monoon
+96,Prosopis juliflora,Neltuma juliflora (Sw.) Raf.,Neltuma
+97,Prunus armeniaca,Prunus armeniaca L.,Prunus
+98,Psidium guajava,Psidium guajava L.,Psidium
+99,Punica granatum,Punica granatum L.,Punica
+100,Putranjiva roxburghii,Putranjiva roxburghii Wall.,Putranjiva
+101,Saraca asoca,Saraca asoca (Roxb.) W.J.de Wilde,Saraca
+102,Spondia pinnata,Spondias pinnata (L.f.) Kurz,Spondias
+103,Spondias pinnata,Spondias pinnata (L.f.) Kurz,Spondias
+104,Sygyium cumini,Syzygium cumini (L.) Skeels,Syzygium
+105,Syzygium cumini,Syzygium cumini (L.) Skeels,Syzygium
+106,Tamarindus indica,Tamarindus indica L.,Tamarindus
+107,Tamarindus indicus,Tamarindus indica L.,Tamarindus
+108,Tectona grandis,Tectona grandis L.f.,Tectona
+109,Terminalia arjuna,Terminalia arjuna (Roxb. ex DC.) Wight & Arn.,Terminalia
+110,Terminalia bellerica,Terminalia bellirica (Gaertn.) Roxb.,Terminalia
+111,Terminalia catappa,Terminalia catappa L.,Terminalia
+112,Terminalia chebula,Terminalia chebula Retz.,Terminalia
+113,Terminallia cattappa,Terminalia catappa L.,Terminalia
+114,Ziziphus jujuba,Ziziphus jujuba Mill.,Ziziphus
+115,Ziziphus,Ziziphus Mill.,Ziziphus
+116,Ziziphus vulgaris,Ziziphus jujuba Mill.,Ziziphus
+117,Zizipus mauritiana,Ziziphus mauritiana Lam.,Ziziphus
+118,Artocarpus lakoocha,Artocarpus lacucha Buch.-Ham.,Artocarpus
+119,Bentinckia nicobarensis,Bentinckia nicobarica (Kurz) Becc.,Bentinckia
+120,Bentinckia,Bentinckia Berry ex Roxb,Bentinckia
+123,Dillenia andamanica,Dillenia andamanica C.E.Parkinson,Dillenia
+124,Diospyros,Diospyros L.,Diospyros
+125,Elaeocarpus macrocerus,Elaeocarpus macrocerus (Turcz.) Merr.,Elaeocarpus
+130,Mangifera camptosperma,Mangifera camptosperma Pierre,Mangifera
+131,Myristica,Myristica Gronov.,Myristica
+132,Pandanus eram andamanicum,Pandanus leram Jones ex R.Millar,Pandanus
+134,Semecarpus anacardium,Semecarpus anacardium L.f.,Semecarpus
+136,Sandoricum koetjape,Sandoricum koetjape (Burm.f.) Merr.,Sandoricum
+137,Syzigium,Syzygium Gaertn.,Syzygium
+150,Pandanus odoratissmus,Pandanus odorifer (Forssk.) Kuntze,Pandanus
+162,Cassia fistula,Cassia fistula L.,Cassia
+164,Coccinia grandis,Cassia fistula L.,Cassia
+167,Geophagy,,
+169,Moringa olifera,Moringa oleifera Lam.,Moringa
+174,Calamus andamanicus,Calamus andamanicus Kurz,Calamus
+175,Calamus palustris,Calamus andamanicus Kurz,Calamus
+177,Fagrea,Fagraea Thunb.,Fagraea
+178,Ficus glomerata,Ficus racemosa L.,Ficus
+181,Ficus pendula,Ficus benjamina L.,Ficus
+187,Semecarpus kurzii,Semecarpus kurzii Engl.,Semecarpus
+191,Careya arborea,Careya arborea Roxb.,Careya
+192,Cullenia exallirata,Cullenia exarillata A.Robyns,Cullenia
+193,Eriodendron penandrum,Ceiba pentandra (L.) Gaertn.,Ceiba
+194,Dichapetalum jelonioides,Dichapetalum gelonioides (Roxb.) Engl.,Dichapetalum
+195,Diospyros foliolosa,Diospyros foliolosa Wall. ex A.DC.,Diospyros
+196,Diospyros sylvastica,Diospyros sylvatica Roxb.,Diospyros
+197,Eleocarpus munronii,Elaeocarpus munroi (Wight) Mast.,Elaeocarpus
+198,Eleocarpus serratus,Elaeocarpus serratus L.,Elaeocarpus
+199,Eleocarpus tuberculatus,Elaeocarpus tuberculatus Roxb.,Elaeocarpus
+200,Erythroxylum monogynum,Erythroxylum monogynum Roxb.,Erythroxylum
+201,Ficus asperima,Ficus trachycoma Miq.,Ficus
+202,Ficus beddomei,Ficus beddomei King,Ficus
+203,Ficus callosa,Ficus callosa Willd.,Ficus
+204,Ficus gullata,Ficus guttata (Wight) Wight ex King,Ficus
+208,Ensete superbum,Ensete superbum (Roxb.) Cheesman,Ensete
+209,Musua ferrea,Mesua ferrea L.,Mesua
+211,Syzygium jambos,Syzygium jambos (L.) Alston,Syzygium
+212,Syzygium mundagam,Syzygium mundagam (Bourd.) Chithra,Syzygium
+214,Achronychia pedunculata,Achronychia pedunculata,Achronychia
+215,Atalantia monophylla,Atalantia monophylla DC.,Atalantia
+216,Madhuca longifolia,Madhuca longifolia (L.) J.F.Macbr.,Madhuca
+217,Palaquium ellipticum,Palaquium ellipticum (Dalzell) Baill.,Palaquium
+218,Nephelium longana,Dimocarpus longan subsp. longan,Dimocarpus
+219,Myristica dactyloides,Myristica malabarica Lam.,Myristica
+220,Psychotria,Psychotria L.,Psychotria
+221,Tarena asiatica,Tarenna asiatica (L.) Kuntze ex K.Schum.,Tarenna
+222,Dimocarpus longan,Dimocarpus longan Lour.,Dimocarpus
+228,Ficus elastic,Ficus elastica Roxb. ex Hornem.,Ficus
+229,Ficus altissima,Ficus altissima Blume,Ficus
+231,Ficus hirta,Ficus simplicissima Lour.,Ficus
+232,Ficus semicordata,Ficus semicordata Buch.-Ham. ex Sm.,Ficus
+236,Morus australis,Broussonetia papyrifera (L.) L'Hér. ex Vent.,Broussonetia
+237,Bauhinia variegate,Bauhinia variegata L.,Bauhinia
+239,Bombax insigna,Bombax insigne Wall.,Bombax
+240,Calophyllum polyanthum,Calophyllum polyanthum Wall. ex Choisy,Calophyllum
+241,Bridelia retusa,Bridelia retusa (L.) A.Juss.,Bridelia
+242,Bischofia javanica,Bischofia javanica Blume,Bischofia
+244,Tarmarindus indica,Tamarindus indica L.,Tamarindus
+245,Erythrina stricta,Erythrina stricta Roxb.,Erythrina
+247,Meyna spinosa,Meyna spinosa Roxb. ex Link,Meyna
+248,Prunus domestica,Prunus domestica L.,Prunus
+249,Rubus ellipticus,Rubus ellipticus Sm.,Rubus
+250,Prunus persica,Prunus persica (L.) Batsch,Prunus
+252,Syzygium grande,Syzygium grande (Wight) Walp.,Syzygium
+253,Syzygium claviflorum,Syzygium claviflorum (Roxb.) Wall. ex Steud.,Syzygium
+256,Musa,Musa L.,Musa
+257,Zizyphus jujube,Ziziphus jujuba Mill.,Ziziphus
+260,Myrica esculenata,Myrica esculenta Buch.-Ham. ex D.Don,Myrica
+261,Willughbeia edulis,Willughbeia edulis,Willughbeia
+262,Carallia brachiate,Carallia brachiata (Lour.) Merr.,Carallia
+274,Muntingia calabura,Muntingia calabura L.,Muntingia
+287,Achras sapota,Manilkara zapota (L.) P.Royen,Manilkara
+288,Guazuma tomentosa,Guazuma ulmifolia Lam.,Guazuma
+289,Vitis vinifera,Vitis vinifera L.,Vitis
