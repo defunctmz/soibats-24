@@ -682,3 +682,95 @@ csci_occ_dt <- csci_occ_dt %>%
          taxon_id)
 
 write_csv(csci_occ_dt,"csci_occ_dt_27012025.csv")
+
+# Fig 1 cit-sci ----
+
+## data input ----
+
+cs_fig1_dt <- read_csv(file.choose()) 
+## use cs_fig1_year_time_series_17032025.csv 
+
+## processing ----
+cs_fig1 <- cs_fig1_dt %>% 
+  pivot_longer(cols = c(inat,ibp),
+               names_to = "dataset",
+               values_to = "count")
+
+## calculate cumulative sum for each dataset
+cs_fig1 <- cs_fig1 %>% 
+  group_by(dataset) %>%
+  arrange(year) %>% 
+  mutate(csum = cumsum(count))
+
+## time series line graph ----
+
+## vars ----
+ibpcol =  "steelblue"
+inatcol = "violet"
+
+# plot
+ggplot(cs_fig1,
+       aes(x = year, y = csum, color = dataset)) +
+  geom_line(linewidth = 0.8,
+            position = "jitter") +
+  scale_y_continuous(breaks = c(seq(0,300,300),seq(500,3000,500))) +
+  scale_x_continuous(breaks = c(seq(1994,2024,5))) +
+  scale_color_manual(labels = c("IBP","Inaturalist"),
+                     values = c("ibp" = ibpcol,
+                              "inat" = inatcol),
+                     name = "Dataset") +
+  labs(x = "Year",
+       y = "Cumulative number of observations") +
+  theme_classic() +
+  theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
+  
+# Fig 2 cit-sci ----
+
+## data input ----
+
+cs_fig2_dt <- read_csv(file.choose())
+# use cs_fig2_monthly_obs_17032025.csv
+
+## processing ----
+cs_fig2 <- cs_fig2_dt %>%
+  pivot_longer(cols = c(inat,ibp),
+               names_to = "dataset",
+               values_to = "count")
+
+## vars ----
+ibpcol =  "steelblue"
+inatcol = "violet"
+
+## plot ----
+
+ggplot(cs_fig2,
+       aes(x = sr, y = count, color = dataset)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = 1:12, labels = month.name) +
+  scale_y_continuous(breaks = c(seq(0,40,10),seq(50,350,50),400)) +
+  scale_color_manual(values = c("ibp" = ibpcol,
+                                "inat" = inatcol),
+                     labels = c("IBP","Inaturalist"),
+                     name = "Dataset") +
+  labs(x = "Month",
+       y = "Number of observations (1994-2024)") +
+  theme_classic() + 
+  theme(axis.text.x = element_text(angle = 45,
+                                   vjust = 0.5,
+                                   hjust = 0.5),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14))
+
+
+
+
+
+
+
+
+
+
