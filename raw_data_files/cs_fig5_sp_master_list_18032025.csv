@@ -1,0 +1,136 @@
+S.No.,Family,English Name,Scientific Name,Authority,Andhra Pradesh,Arunachal Pradesh,Assam,Bihar,Chhattisgarh,Gujarat,Goa,Haryana,Himachal Pradesh,Jharkhand,Karnataka,Kerala,Madhaya Pradesh,Maharashtra,Manipur,Meghalaya,Mizoram,Nagaland,Odisha,Punjab,Rajasthan,Sikkim,Tamil Nadu,Telangana,Tripura,Uttarpradesh,Uttarakhand,West Bengal,Andaman & Nicobar,Chandigarh,"Dadra Nagar Haveli, Daman & Diu",Delhi,Jammu & Kashmir,Ladakh,Lakshadweep,Puducherry
+1,Pteropodidae,Greater Short-nosed Fruit Bat,Cynopterus sphinx,"(Vahl, 1797)",1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,1,1,Uttam,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,1
+2,Pteropodidae,Lesser Short-nosed Fruit Bat,Cynopterus brachyotis,"(Müller, 1838)",1,1,1,Uttam,0,Uttam,1,0,0,0,1,1,Uttam,1,0,1,1,1,Uttam,0,0,0,1,0,0,0,0,Uttam,1,0,0,0,0,0,0,0
+3,Pteropodidae,Lesser Dawn Bat,Eonycteris spelaea,"(Dobson, 1871)",1,1,1,0,0,0,0,0,0,0,1,1,0,0,1,1,1,1,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0
+4,Pteropodidae,Salim Ali’s Fruit Bat,Latidens salimalii,"Thonglongya, 1972",0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
+5,Pteropodidae,Greater Long-nosed Fruit Bat,Macroglossus sobrinus,"K. Andersen, 1911",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,Uttam,0,0,1,0,0,0,0,0,0,0,0
+6,Pteropodidae,Ratanaworabhan’s Fruit Bat,Megaerops niphanae,"Yenbutra & Fenten, 1983",0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+7,Pteropodidae,Indian Flying Fox,Pteropus medius,"Temminck, 1825",1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,Uttam,Uttam,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1
+8,Pteropodidae,Variable Flying Fox,Pteropus hypomelanus,"Temminck, 1853",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+9,Pteropodidae,Black-eared Flying Fox,Pteropus melanotus,"Blyth, 1863",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+10,Pteropodidae,Nicobar Flying Fox,Pteropus faunulus,"Miller, 1902",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+11,Pteropodidae,Leschenault’s Rousette,Rousettus leschenaultii,"(Desmarest, 1820)",1,1,1,1,1,1,1,Uttam,1,1,1,1,1,1,1,1,1,1,1,Uttam,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0
+12,Pteropodidae,Blanford’s Fruit Bat,Sphaerias blanfordi,"(Thomas, 1891)",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+13,Rhinolophidae,Greater Horseshoe Bat,Rhinolophus ferrumequinum,"(Schreber, 1774)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0
+14,Rhinolophidae,Lesser Horseshoe Bat,Rhinolophus hipposideros,"(André, 1797)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0
+15,Rhinolophidae,Intermediate Horseshoe Bat,Rhinolophus affinis,"Horsfield, 1823",0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0
+16,Rhinolophidae,Least Horseshoe Bat,Rhinolophus pusillus,"Temminck, 1834",1,1,1,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+17,Rhinolophidae,Trefoil Horseshoe Bat,Rhinolophus trifoliatus,"Temminck, 1834",0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+18,Rhinolophidae,Northern Woolly Horseshoe Bat,Rhinolophus perniger,"Hodgson, 1843",1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1,1,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+19,Rhinolophidae,Greater Japanese Horseshoe Bat,Rhinolophus nippon,"Temminck, 1835",0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+20,Rhinolophidae,Lesser Rufous Horseshoe Bat,Rhinolophus rouxii,"Temminck, 1835",1,Uttam,0,0,1,0,1,0,0,0,1,1,1,1,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+21,Rhinolophidae,Blyth’s Horseshoe Bat,Rhinolophus lepidus,"Blyth, 1844",1,0,1,1,Uttam,1,Uttam,Uttam,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,0,Uttam,1,1,0,0,0,1,0,0,0,0
+22,Rhinolophidae,Big-eared Horseshoe Bat,Rhinolophus macrotis,"Blyth, 1844",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+23,Rhinolophidae,Mitred Horseshoe Bat,Rhinolophus mitratus,"Blyth, 1844",0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+24,Rhinolophidae,Little Nepalese Horseshoe Bat,Rhinolophus subbadius,"Blyth, 1844",0,1,0,0,0,0,0,0,0,0,0,0,0,0,Uttam,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+25,Rhinolophidae,Pearson’s Horseshoe Bat,Rhinolophus pearsonii,"Horsfield, 1851",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+26,Rhinolophidae,Homfray’s Horseshoe Bat,Rhinolophus andamanensis,"Dobson, 1872",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+27,Rhinolophidae,Dobson’s Horseshoe Bat,Rhinolophus yunanensis,"Dobson, 1872",0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+28,Rhinolophidae,Beddome’s Horseshoe Bat,Rhinolophus beddomei,"K. Andersen, 1905",1,0,0,0,0,0,1,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
+29,Rhinolophidae,Chinese Horseshoe Bat,Rhinolophus sinicus,"K. Andersen, 1905",0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+30,Rhinolophidae,Andaman Horseshoe Bat,Rhinolophus cognatus,"K. Andersen, 1906",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+31,Rhinolophidae,Shortridge’s Horseshoe Bat,Rhinolophus shortridgei,"K. Andersen, 1918",0,0,0,0,0,0,0,0,0,0,0,0,0,0,Uttam,0,Uttam,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+32,Hipposideridae,Geoffroy’s Trident Leaf-nosed Bat,Asellia tridens,"(E. Geoffroy, 1813)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+33,Hipposideridae,East Asian Tail-less Leaf-nosed Bat,Coelops frithii,"Blyth, 1848",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+34,Hipposideridae,Schneider’s Leaf-nosed Bat,Hipposideros speoris,"(Schneider, 1800)",1,0,0,0,0,1,1,0,0,0,1,1,0,1,0,0,0,0,1,0,0,0,1,1,0,Uttam,1,0,0,0,0,0,0,0,0,0
+35,Hipposideridae,Diadem Leaf-nosed Bat,Hipposideros diadema,"(E. Geoffroy, 1813)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+36,Hipposideridae,Great Leaf-nosed Bat,Hipposideros armiger,"(Hodgson, 1835)",0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,1,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+37,Hipposideridae,Fulvus Leaf-nosed Bat,Hipposideros fulvus,"Gray, 1838",1,0,0,1,Uttam,1,0,1,0,1,1,1,1,1,0,0,0,0,1,Uttam,1,0,1,1,0,1,0,1,1,0,0,0,0,0,0,0
+38,Hipposideridae,Cantor’s Leaf-nosed Bat,Hipposideros galeritus,"Cantor, 1846",0,0,0,1,0,1,0,0,0,0,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0
+39,Hipposideridae,Dusky Leaf-nosed Bat,Hipposideros ater,"Templeton, 1848",0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,Uttam,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+40,Hipposideridae,Kelaart’s Leaf-nosed Bat,Hipposideros lankadiva,"Kelaart, 1850",1,0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,1,0,1,0,0,1,Uttam,0,0,1,0,0,0,0,0,0,0,0
+41,Hipposideridae,Ashy Leaf-nosed Bat,Hipposideros cineraceus,"Blyth, 1853",0,1,1,0,1,0,0,Uttam,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+42,Hipposideridae,Nicobar Leaf-nosed Bat,Hipposideros nicobarulae,"Miller, 1902",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+43,Hipposideridae,Andersen’s Leaf-nosed Bat,Hipposideros gentilis,"K. Andersen, 1918",0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0
+44,Hipposideridae,Pomona Leaf-nosed Bat,Hipposideros pomona,"K. Andersen, 1918",0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
+45,Hipposideridae,Horsefield's Leaf-nosed Bat,Hipposideros larvatus,"(Horsfield, 1823)",0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,Uttam,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+46,Hipposideridae,Durga Das’s Leaf-nosed Bat,Hipposideros durgadasi,"Khajuria, 1970",1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0
+47,Hipposideridae,Leafletted Leaf-nosed Bat,Hipposideros hypophyllus,"Kock and Bhat, 1994",0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+48,Megadermatidae,Greater False Vampire Bat,Lyroderma lyra,"(E. Geoffroy, 1810)",1,1,1,1,1,1,Uttam,Uttam,1,1,1,1,1,1,0,1,0,Uttam,1,0,1,Uttam,1,1,1,1,1,1,0,0,Uttam,1,1,0,0,0
+49,Megadermatidae,Lesser False Vampire Bat,Megaderma spasma,"(Linnaeus, 1758)",1,0,1,0,0,1,1,0,0,0,1,1,Uttam,1,0,1,1,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0
+50,Rhinopomatidae,Lesser Mouse-tailed Bat,Rhinopoma hardwickii,"Gray, 1831",1,0,0,1,0,1,0,Uttam,0,1,1,1,1,1,0,0,0,0,1,Uttam,1,0,1,1,0,1,0,1,0,0,0,1,0,0,0,0
+51,Rhinopomatidae,Greater Mouse-tailed Bat,Rhinopoma microphyllum,"(Brünnich, 1872)",0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0
+52,Emballonuridae,Pouch-bearing Tomb Bat,Saccolaimus saccolaimus,"(Temminck, 1838)",0,0,1,0,0,1,Uttam,0,0,0,1,1,1,1,0,Uttam,0,0,1,0,0,0,1,0,0,1,0,1,1,0,0,0,0,0,0,0
+53,Emballonuridae,Egyptian Tomb Bat,Taphozous perforatus,"E. Geoffroy, 1818",1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+54,Emballonuridae,Long-winged Tomb Bat,Taphozous longimanus,"Hardwicke, 1825",1,0,1,1,0,1,Uttam,0,0,1,1,1,1,1,0,1,0,1,Uttam,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,0
+55,Emballonuridae,Naked-rumped Tomb Bat,Taphozous nudiventris,"Cretzschmar, 1830",1,0,0,1,0,1,0,Uttam,0,0,1,0,1,1,0,0,0,0,0,0,1,1,1,1,0,1,0,1,0,0,0,1,0,0,0,0
+56,Emballonuridae,Black-bearded Tomb Bat,Taphozous melanopogon,"Temminck, 1841",1,0,0,1,1,1,1,Uttam,0,Uttam,1,1,1,1,0,Uttam,0,0,Uttam,0,1,0,1,1,0,0,0,0,1,0,0,1,0,0,0,1
+57,Emballonuridae,Theobald’s Tomb Bat,Taphozous theobaldi,"Dobson, 1872",0,0,0,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+58,Molossidae,Wrinkle-lipped Free-tailed Bat,Chaerephon plicatus,"(Buchanan, 1800)",1,0,0,0,0,0,1,0,0,0,1,1,1,1,0,1,0,0,0,1,1,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0
+59,Molossidae,Wroughton’s Giant Mastiff Bat,Otomops wroughtoni,"(Thomas, 1913)",0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+60,Molossidae,European Free-tailed Bat,Tadarida teniotis,"(Rafinesque, 1814)",0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+61,Molossidae,Egyptian Free-tailed Bat,Tadarida aegyptiaca,"(E. Geoffroy, 1818)",0,0,0,0,1,1,Uttam,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,1,1,0,0,0,1,0,0,0,1,0,0,1,0
+62,Vespertilionidae,Bronze Sprite,Arielulus circumdatus,"(Temminck, 1840)",0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0
+63,Vespertilionidae,Oriental Serotine,Cnephaeus pachyomus,"(Tomes, 1857)",0,0,1,0,0,0,0,0,Uttam,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0
+64,Vespertilionidae,Thick-eared Bat,Cnephaeus pachyotis,"(Dobson, 1871)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+65,Vespertilionidae,Ognev’s Serotine,Cnephaeus ognevi,"Bobrinskii, 1918",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
+66,Vespertilionidae,Gobi Big Brown Bat,Cnephaeus gobiensis,"Bobrinskii, 1926",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
+67,Vespertilionidae,Sombre Bat,Cnephaeus tatei,"Ellerman & Morrison-Scott, 1951",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+68,Vespertilionidae,Tickell’s Bat,Hesperoptenus tickelli,"(Blyth, 1851)",1,0,Uttam,0,1,0,1,0,0,1,1,0,1,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0
+69,Vespertilionidae,Desert Yellow Lesser House Bat,Scotoecus pallidus,"(Dobson, 1876)",0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0
+70,Vespertilionidae,Harlequin Bat,Scotomanes ornatus,"(Blyth, 1851)",0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+71,Vespertilionidae,Lesser Asiatic Yellow House Bat,Scotophilus kuhlii,"Leach, 1821",1,0,1,1,Uttam,1,Uttam,Uttam,1,1,1,1,1,1,0,1,0,0,1,Uttam,1,Uttam,1,1,1,1,1,1,1,Uttam,0,1,0,0,0,1
+72,Vespertilionidae,Greater Asiatic Yellow House Bat,Scotophilus heathii,"(Horsfield, 1831)",1,1,1,1,Uttam,1,Uttam,1,1,1,1,1,1,1,1,1,0,1,1,1,1,Uttam,1,1,Uttam,1,1,1,0,1,1,1,1,0,0,1
+73,Vespertilionidae,Chinese Noctule,Nyctalus plancyi,"(Gerbe, 1880)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,1,0,0,0
+74,Vespertilionidae,Leisler’s Noctule,Nyctalus leisleri,"(Kuhl, 1817)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0
+75,Vespertilionidae,Mountain Noctule,Nyctalus montanus,"(Barret-Hamilton, 1906)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0
+76,Vespertilionidae,Common Pipistrelle,Pipistrellus pipistrellus,"(Schreber, 1774)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0
+77,Vespertilionidae,Indian Pipistrelle,Pipistrellus coromandra,"(Gray, 1838)",1,1,1,1,0,1,1,Uttam,1,1,1,1,1,1,1,1,0,1,1,Uttam,0,1,1,0,1,1,1,1,1,0,0,1,1,0,0,1
+78,Vespertilionidae,Javan Pipistrelle,Pipistrellus javanicus,"(Gray, 1838)",0,1,1,1,0,0,0,0,1,0,0,0,1,1,0,Uttam,1,1,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,0
+79,Vespertilionidae,Japanese Pipistrelle,Pipistrellus abramus,"(Temminck, 1840)",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0
+80,Vespertilionidae,Least Pipistrelle,Pipistrellus tenuis,"(Temminck, 1840)",1,Uttam,1,1,Uttam,1,Uttam,1,1,1,1,1,1,1,1,1,Uttam,1,1,Uttam,1,0,1,1,1,1,1,1,0,1,0,1,0,0,0,0
+81,Vespertilionidae,Kelaart’s Pipistrelle,Pipistrellus ceylonicus,"(Kelaart, 1852)",1,0,0,Uttam,0,1,1,0,1,1,1,1,1,1,0,Uttam,0,0,1,0,1,0,1,1,0,0,1,1,0,Uttam,0,1,0,0,0,0
+82,Vespertilionidae,Mount Popa Pipistrelle,Pipistrellus paterculus,"Thomas, 1915",0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0
+83,Vespertilionidae,Dormer’s Pipistrelle,Scotozous dormeri,"Dobson, 1875",1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,0,1,1,0,1,0,0,1
+84,Vespertilionidae,Large Barbastelle,Barbastella darjelingensis,"Hodgson [in Horsfield], 1855",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0
+85,Vespertilionidae,Turkestani Long-eared Bat,Otonycteris leucophaea,"Severcov, 1873",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0
+86,Vespertilionidae,Hodgson’s Long-eared Bat,Plecotus homochrous,"Hodgson, 1847",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,Uttam,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0
+87,Vespertilionidae,Ward’s Long-eared Bat,Plecotus wardi,"Thomas, 1911",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,0,0
+88,Vespertilionidae,Chocolate Pipistrelle,Hypsugo affinis,"(Dobson, 1871)",0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0
+89,Vespertilionidae,Savi’s Pipistrelle,Hypsugo savii,"(Bonaparte, 1837)",0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
+90,Vespertilionidae,Cadorna’s Pipistrelle,Hypsugo cadornae,"(Thomas, 1916)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+91,Vespertilionidae,Joffre's Pipistrelle,Mirostrellus joffrei,"(Thomas, 1915)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0
+92,Vespertilionidae,Great Evening Bat,Ia io,"Thomas, 1902",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+93,Vespertilionidae,Meghalaya Thick-thumbed Bat,Glischropus meghalayanus,"Saikia, Ruedi & Csorba, 2022",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+94,Vespertilionidae,Disk-footed bat,Eudiscopus denticulus,"(Osgood, 1932)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+95,Vespertilionidae,Blyth’s Lesser Bamboo Bat,Tylonycteris fulvida,"(Blyth, 1859)",0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,Uttam,Uttam,0,0,0,0,1,0,0,Uttam,0,0,1,0,0,0,0,0,0,0,0
+96,Vespertilionidae,Malayan Greater Bamboo Bat,Tylonycteris malayana,"Chasen, 1940",0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+97,Vespertilionidae,Hodgson’s Myotis,Myotis formosus,"(Hodgson, 1835)",0,0,1,1,0,0,0,0,1,1,0,0,0,1,0,1,1,0,0,1,0,Uttam,0,0,0,0,1,1,0,0,0,0,1,0,0,0
+98,Vespertilionidae,Lesser Large-footed Myotis,Myotis hasseltii,"(Temminck, 1840)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+99,Vespertilionidae,Horsfield’s Myotis,Myotis horsfieldii,"(Temminck, 1840)",0,0,1,0,0,0,1,0,0,0,1,1,1,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0
+100,Vespertilionidae,Hairy-faced Myotis,Myotis muricola,"(Gray, 1846)",0,0,1,0,0,0,0,0,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,Uttam,1,0,0,0,0,0,0,0,0
+101,Vespertilionidae,Himalayan Whiskered Myotis,Myotis siligorensis,"(Horsfield, 1855)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+102,Vespertilionidae,Lesser Myotis,Myotis blythii,"(Tomes, 1857)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0
+103,Vespertilionidae,Rickett's Big-footed Myotis,Myotis pilosus,"(Peters, 1869)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+104,Vespertilionidae,Nepal Myotis,Myotis nipalensis,"(Dobson, 1871)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0
+105,Vespertilionidae,Hairy-faced Myotis,Myotis annectans,"(Dobson, 1871)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+106,Vespertilionidae,Chinese Water Myotis,Myotis laniger,"(Peters, 1870)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+107,Vespertilionidae,Kashmir Cave Myotis,Myotis longipes,"(Dobson, 1873)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0
+108,Vespertilionidae,Burmese Whiskered Myotis,Myotis montivagus,"(Dobson, 1874)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Uttam,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+109,Vespertilionidae,Sichuan Myotis,Myotis altarium,"Thomas, 1911",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+110,Vespertilionidae,Peyton’s Whiskered Myotis,Myotis peytoni,"Wroughton & Ryley, 1913",1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
+111,Vespertilionidae,Mendelli’s Mouse-eared Myotis,Myotis sicarius,"Thomas, 1915",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+112,Vespertilionidae,Long-tailed Whiskered Bat ,Myotis frater,"Aellen, 1923",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0
+113,Vespertilionidae,Tomes’ Hairy-faced Myotis,Submyotodon caliginosus,"(Tomes, 1859)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0
+114,Vespertilionidae,Lesser Hairy-winged Bat,Harpiocephalus harpia,"(Temminck, 1840)",1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0
+115,Vespertilionidae,Little Tube-nosed Bat,Murina aurata,"Milne-Edwards, 1872",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0
+116,Vespertilionidae,Round-eared Tube-nosed Bat,Murina cyclotis,"Dobson, 1872",1,Uttam,0,0,0,0,0,0,Uttam,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0
+117,Vespertilionidae,Hutton’s Tube-nosed Bat,Murina huttoni,"(Peters, 1872)",0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,Uttam,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0
+118,Vespertilionidae,Greater Tube-nosed Bat,Murina leucogaster,"Milne-Edwards, 1872",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+119,Vespertilionidae,Scully’s Tube-nosed Bat,Murina tubinaris,"(Scully, 1881)",0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,1,0,0
+120,Vespertilionidae,Rainforest Tube-nosed Bat,Murina pluvialis,"Ruedi, Biswas & Csorba, 2012",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+121,Vespertilionidae,Jaintia Tube-nosed Bat,Murina jaintiana,"Ruedi, Biswas & Csorba, 2012",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+122,Vespertilionidae,Guillen’s Tube-nosed Bat,Murina guilleni,"Soisook, Karapan, Satasook, Dinh Thong, Khan, Maryanto, Csorba, Furey, Aul & Bates, 2013",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+123,Vespertilionidae,Peters's Tube-nosed Bat,Harpiola grisea,"(Peters, 1872)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,Uttam,0,0,0,0,0,0,0,0,0
+124,Vespertilionidae,Peters's Trumpet-eared Bat,Phoniscus jagorii,"(Peters, 1866)",0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+125,Vespertilionidae,Painted Woolly Bat,Kerivoula picta,"(Pallas, 1767)",1,Uttam,1,0,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,0,0,0,0
+126,Vespertilionidae,Cryptic Woolly Bat,Kerivoula crypta,"Wroughton & Ryley, 1913",0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+127,Vespertilionidae,Lenis Woolly Bat,Kerivoula lenis,"Thomas, 1916",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0
+128,Vespertilionidae,Kachin Woolly Bat,Kerivoula kachinensis,"Bates, Struebig, Rossiter, Kingston, Sia Sein Lein Oo & Khin Mya Mya, 2004",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+129,Vespertilionidae,Dark Woolly Bat,Kerivoula furva,"Kuo et al., 2017",0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0
+130,Miniopteridae,Eastern Long-fingered Bat,Miniopterus fuliginosus,"(Hodgson, 1835)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0
+131,Miniopteridae,Small Long-fingered Bat,Miniopterus pusillus,"Dobson, 1876",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+132,Miniopteridae,Phillip's Long-fingered Bat,Miniopterus phillipsi,"Kusuminda, Mannakkara, Ukuwela, Kruskop, Amarasinghe, Saikia, Venugopal, Karunarathna, Gamage, Ruedi, Csorba, Yapa and Patterson, 2022",1,0,0,0,0,0,Uttam,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+133,Miniopteridae,Western Long-fingered Bat,Miniopterus magnater,"Sanborn, 1931",0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+134,Miniopteridae,Srini's Long-fingered Bat,Miniopterus srinii,"Srinivasulu & Srinivasulu, 2023",0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+,,,,,34,29,34,21,9,24,18,5,33,20,41,41,31,37,19,63,32,27,23,5,22,35,35,21,8,23,52,68,26,4,4,15,26,14,1,9

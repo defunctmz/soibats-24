@@ -7,7 +7,8 @@ pacman::p_load(pacman,
                tidygraph,
                ggraph,
                ggrepel,
-               oaqc)
+               oaqc,
+               taxize)
 
 # EB group - Overall - Data cleaning ----
 
@@ -403,7 +404,7 @@ ggraph(pt_graph,
   ggtitle(title) +
   theme_void()
 
-## Non pteropotid network - clean up ----
+# Non pteropotid network - clean up ----
 npt_dt <- read_csv(file.choose()) 
 
 str(npt_dt)  # Check the structure of the dataset
@@ -638,51 +639,6 @@ ggplot(tx_dt_csum,aes(year,
 
 # Citizen Science ----
 
-## Data clean up ----
-
-## IBP data ----
-
-ibp_raw <- read_csv(file.choose()) # use file name "IBP-withmedia-raw-24012025.csv" here
-
-ibp_dt <- ibp_raw %>% 
-  select(catalogNumber,
-         locationLat,
-         locationLon,
-         rank,
-         scientificName,
-         order:genus) %>% 
-  mutate(database = "ibp")
-
-## iNat data ----
-
-inat_raw <- read_csv(file.choose()) # use file name "Inat-raw-24012025.csv" here
-
-inat_dt <- inat_raw %>% 
-  select(id,
-         quality_grade,
-         latitude,
-         longitude,
-         scientific_name,
-         taxon_id) %>% 
-  mutate(database = "inat")
-
-csci_occ_dt <- bind_rows(ibp_dt,inat_dt)
-
-csci_occ_dt <- csci_occ_dt %>%
-  mutate(id = if_else(database == "ibp", catalogNumber, id)) %>%
-  mutate(latitude = if_else(database == "ibp", locationLat, latitude)) %>%
-  mutate(longitude = if_else(database == "ibp", locationLon, longitude)) %>%
-  mutate(scientific_name = if_else(database == "ibp", scientificName, scientific_name)) %>%
-  select(database,
-         id,
-         latitude,
-         longitude,
-         scientific_name,
-         rank,
-         taxon_id)
-
-write_csv(csci_occ_dt,"csci_occ_dt_27012025.csv")
-
 # Fig 1 cit-sci ----
 
 ## data input ----
@@ -746,8 +702,8 @@ inatcol = "violet"
 
 ggplot(cs_fig2,
        aes(x = sr, y = count, color = dataset)) +
-  geom_line() +
-  geom_point() +
+  geom_line(linewidth = 0.8) +
+  geom_label(aes(label = count), col = "black") +
   scale_x_continuous(breaks = 1:12, labels = month.name) +
   scale_y_continuous(breaks = c(seq(0,40,10),seq(50,350,50),400)) +
   scale_color_manual(values = c("ibp" = ibpcol,
@@ -765,12 +721,106 @@ ggplot(cs_fig2,
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14))
 
+## merged datasets version
+cs_fig2_dtmerge <- cs_fig2 %>% 
+  ungroup() %>% 
+  select(-dataset) %>% 
+  group_by(sr) %>% 
+  mutate(monthly_counts = sum(count)) %>% 
+  select(-count) %>% 
+  unique()
 
+## merged datasets plot ----
 
+ggplot(cs_fig2_dtmerge,
+       aes(x = sr, y = monthly_counts)) +
+  geom_line(linewidth = 0.8, col = "steelblue") +
+  geom_label(aes(label = monthly_counts), col = "black") +
+  scale_x_continuous(breaks = 1:12, labels = month.name) +
+  labs(x = "Month",
+       y = "Number of observations (1994-2024)") +
+  theme_classic() + 
+  theme(axis.text.x = element_text(angle = 45,
+                                   vjust = 0.5,
+                                   hjust = 0.5),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14))
 
+# Fig 5 Proportion of representation of bat taxa in datasets (by family) ----
 
+## - data input ----
 
+cs_fig5_masterlist_dt <- read_csv(file.choose())
+# use "cs_fig5_sp_master_list_18032025.csv"
+# this will be used to derive the number of species in each family present in India
 
+## IBP data ----
 
+ibp_raw <- read_csv(file.choose()) # use file name "IBP-withmedia-raw-24012025.csv" here
 
+ibp_dt <- ibp_raw %>% 
+  select(catalogNumber,
+         locationLat,
+         locationLon,
+         rank,
+         scientificName,
+         order:genus) %>% 
+  mutate(database = "ibp")
 
+## iNat data ----
+
+inat_raw <- read_csv(file.choose()) # use file name "Inat-raw-24012025.csv" here
+
+# processing - combining the two datasets into one larger set 
+
+inat_dt <- inat_raw %>% 
+  select(id,
+         quality_grade,
+         latitude,
+         longitude,
+         scientific_name,
+         taxon_id) %>% 
+  mutate(database = "inat")
+
+csci_occ_dt <- bind_rows(ibp_dt,inat_dt)
+
+csci_occ_dt <- csci_occ_dt %>%
+  mutate(id = if_else(database == "ibp", catalogNumber, id)) %>%
+  mutate(latitude = if_else(database == "ibp", locationLat, latitude)) %>%
+  mutate(longitude = if_else(database == "ibp", locationLon, longitude)) %>%
+  mutate(scientific_name = if_else(database == "ibp", scientificName, scientific_name)) %>%
+  select(database,
+         id,
+         latitude,
+         longitude,
+         scientific_name,
+         rank,
+         taxon_id)
+
+write_csv(csci_occ_dt,"csci_occ_dt_27012025.csv")
+
+## combined datasheet input ----
+
+cs_fig5_datasets_dt <- read_csv(file.choose())
+# use "csci_occ_dt_27012025.csv" 
+
+## Explainer ---- 
+# steps below - 
+# filter out unique taxon names
+# fetch family names then to get a list of species names with families recorded in the two datasets
+# total up numbers by family names to get the proportions
+# Match these numbers to the number of species in each family reported as in the master list for the country 
+
+cs_fig5_sp_family <-  cs_fig5_datasets_dt %>% 
+  select(scientific_name) %>% 
+  group_by(scientific_name) %>% 
+  mutate(obs_count = n()) %>% 
+  unique()
+  
+# using package taxise to fetch family names from scientific names
+
+cs_fig5_sp_family$family <- tax_name(sci = cs_fig5_sp_family$scientific_name,
+                                 get = "family",
+                                 db = "itis")
