@@ -548,7 +548,8 @@ npt_edges <- as_tibble(npt_graph, active = "edges") ; View(npt_edges)
 
 # layout to make nodes with higher centrality plotted towards the center of the graph
 set.seed(0) 
-npt_layout_centrality <- layout_with_gem(as.igraph(npt_graph))
+npt_layout_centrality <- layout_with_kk(as.igraph(npt_graph),
+                                        weights = E(as.igraph(npt_graph))$weight)
 
 ### visual vars ----
 layout_fixed = npt_layout_centrality
@@ -579,6 +580,45 @@ ggraph(npt_graph,
                                 "Diet" = dietcol)) +
   scale_size_continuous(range = node_sizerange,
                         guide = "none") + # Adjust node size scale 
+  ggtitle(title) +
+  theme_void()
+
+# manual gem layout ----
+ig_graph <- as.igraph(npt_graph)
+
+# Generate GEM layout
+set.seed(0)
+layout_gem <- layout_with_gem(ig_graph)
+
+# Convert layout to dataframe
+layout_df <- as.data.frame(layout_gem)
+colnames(layout_df) <- c("x", "y")
+
+# Get node attributes
+node_types <- as_tibble(npt_graph, active = "nodes")$type
+
+# Normalize positions using scale to prevent extreme spread
+layout_df$x <- scale(layout_df$x)[,1]
+layout_df$y <- scale(layout_df$y)[,1]
+
+# Move diet nodes slightly toward the center without extreme clustering
+layout_df[node_types == "Diet", ] <- layout_df[node_types == "Diet", ] * 0.6
+
+# Plot with adjusted layout
+ggraph(npt_graph, layout = "manual", x = layout_df$x, y = layout_df$y) +
+  geom_edge_link(aes(edge_alpha = edgealpha),
+                 color = edgecol,
+                 width = edgewd,
+                 show.legend = FALSE) +
+  geom_node_point(aes(color = type, 
+                      size = size,
+                      shape = type)) +
+  geom_node_text(aes(label = name),
+                 repel = TRUE,
+                 size = labelsize) +
+  scale_shape_manual(values = c("Bat" = batshp, "Diet" = dietshp)) +
+  scale_color_manual(values = c("Bat" = batcol, "Diet" = dietcol)) +
+  scale_size_continuous(range = node_sizerange, guide = "none") +
   ggtitle(title) +
   theme_void()
 
