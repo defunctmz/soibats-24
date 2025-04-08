@@ -547,7 +547,7 @@ npt_nodes <- as_tibble(npt_graph, active = "nodes") ; View(npt_nodes)
 npt_edges <- as_tibble(npt_graph, active = "edges") ; View(npt_edges)
 
 # layout to make nodes with higher centrality plotted towards the center of the graph
-set.seed(0) 
+set.seed(1) 
 npt_layout_centrality <- layout_with_kk(as.igraph(npt_graph),
                                         weights = E(as.igraph(npt_graph))$weight)
 
@@ -583,28 +583,37 @@ ggraph(npt_graph,
   ggtitle(title) +
   theme_void()
 
-# manual gem layout ----
-ig_graph <- as.igraph(npt_graph)
+# test revisions ----
+## manual concentric layout ---- 
 
-# Generate GEM layout
-set.seed(0)
-layout_gem <- layout_with_gem(ig_graph)
+# Get node data
+nodes <- as_tibble(npt_graph, active = "nodes")
+nodes <- nodes %>% mutate(id = row_number())
 
-# Convert layout to dataframe
-layout_df <- as.data.frame(layout_gem)
-colnames(layout_df) <- c("x", "y")
+# Separate bats and diet items
+bats <- nodes %>% filter(type == "Bat") %>% arrange(desc(size))
+diet <- nodes %>% filter(type == "Diet")
 
-# Get node attributes
-node_types <- as_tibble(npt_graph, active = "nodes")$type
+# Number of each
+n_bats <- nrow(bats)
+n_diet <- nrow(diet)
 
-# Normalize positions using scale to prevent extreme spread
-layout_df$x <- scale(layout_df$x)[,1]
-layout_df$y <- scale(layout_df$y)[,1]
+# Assign inner circle layout for diet nodes
+diet$angle <- seq(0, 2 * pi, length.out = n_diet + 1)[- (n_diet + 1)]
+diet$x <- cos(diet$angle) * 1
+diet$y <- sin(diet$angle) * 1
 
-# Move diet nodes slightly toward the center without extreme clustering
-layout_df[node_types == "Diet", ] <- layout_df[node_types == "Diet", ] * 0.6
+# Assign outer circle layout for bats (sorted by degree)
+bats$angle <- seq(0, 2 * pi, length.out = n_bats + 1)[- (n_bats + 1)]
+bats$x <- cos(bats$angle) * 2
+bats$y <- sin(bats$angle) * 2
 
-# Plot with adjusted layout
+# Combine layout data
+layout_df <- bind_rows(diet, bats) %>%
+  arrange(id) %>%
+  select(x, y)
+
+# Plot using manual layout
 ggraph(npt_graph, layout = "manual", x = layout_df$x, y = layout_df$y) +
   geom_edge_link(aes(edge_alpha = edgealpha),
                  color = edgecol,
@@ -616,6 +625,226 @@ ggraph(npt_graph, layout = "manual", x = layout_df$x, y = layout_df$y) +
   geom_node_text(aes(label = name),
                  repel = TRUE,
                  size = labelsize) +
+  scale_shape_manual(values = c("Bat" = batshp, "Diet" = dietshp)) +
+  scale_color_manual(values = c("Bat" = batcol, "Diet" = dietcol)) +
+  scale_size_continuous(range = node_sizerange, guide = "none") +
+  ggtitle(title) +
+  theme_void()
+
+## bats inwards rev ----
+
+# --- Load Data
+npt_dt_v2 <- read_csv(file.choose())  # Choose "soibats_es_npt_dietls_v2_30012025.csv"
+
+# --- Create Graph
+npt_graph <- tbl_graph(edges = npt_dt_v2, directed = FALSE) %>%
+  mutate(
+    type = ifelse(name %in% npt_dt_v2$sp, "Bat", "Diet"),
+    size = centrality_degree()
+  )
+
+# --- Layout: KK Layout 
+set.seed(1)
+kk_layout <- layout_with_kk(as.igraph(npt_graph))
+
+# Combine layout with node metadata
+layout_df <- as_tibble(kk_layout) %>%
+  rename(x = V1, y = V2) %>%
+  bind_cols(as_tibble(npt_graph, active = "nodes"))
+
+# --- Radial Adjustment: Mild push/pull for clarity
+layout_df <- layout_df %>%
+  mutate(
+    angle = atan2(y, x),
+    radius = sqrt(x^2 + y^2),
+    radius = case_when(
+      type == "Diet" ~ radius * 1.15,  # Slight push
+      type == "Bat"  ~ radius * 0.9,   # Slight pull inward
+      TRUE ~ radius
+    ),
+    x = radius * cos(angle),
+    y = radius * sin(angle)
+  )
+
+# --- Plot Settings
+labelsize <- 3.5
+edgecol <- "gray70"
+edgewd <- 0.6
+edgealpha <- 0.5
+batshp <- 17
+batcol <- "turquoise3"
+dietshp <- 16
+dietcol <- "orchid"
+node_sizerange <- c(2, 6)
+title <- "Non-pteropotid bats and diet network\n(Node Size = Degree Centrality)"
+
+# --- Plot
+ggraph(npt_graph, layout = "manual", x = layout_df$x, y = layout_df$y) +
+  geom_edge_link(color = edgecol,
+                 alpha = edgealpha,
+                 width = edgewd,
+                 show.legend = FALSE) +
+  geom_node_point(aes(color = type,
+                      size = size,
+                      shape = type)) +
+  geom_node_text(aes(label = name),
+                 repel = TRUE,
+                 size = labelsize,
+                 family = "sans") +
+  scale_shape_manual(values = c("Bat" = batshp, "Diet" = dietshp)) +
+  scale_color_manual(values = c("Bat" = batcol, "Diet" = dietcol)) +
+  scale_size_continuous(range = node_sizerange, guide = "none") +
+  ggtitle(title) +
+  theme_void()
+
+# bats inwards rev 2 - spacing increase ----
+
+# --- Load Data
+npt_dt_v2 <- read_csv(file.choose())  # Choose "soibats_es_npt_dietls_v2_30012025.csv"
+
+# --- Create Graph
+npt_graph <- tbl_graph(edges = npt_dt_v2, directed = FALSE) %>%
+  mutate(
+    type = ifelse(name %in% npt_dt_v2$sp, "Bat", "Diet"),
+    size = centrality_degree()
+  )
+
+# --- Layout: KK ----
+set.seed(1)
+kk_layout <- layout_with_kk(as.igraph(npt_graph))
+
+layout_df <- as_tibble(kk_layout) %>%
+  rename(x = V1, y = V2) %>%
+  bind_cols(as_tibble(npt_graph, active = "nodes"))
+
+# --- Radial Adjustment with Overall Spacing ----
+# Gently scale all nodes outward, and slightly emphasize diet vs. bat spacing
+layout_df <- layout_df %>%
+  mutate(
+    angle = atan2(y, x),
+    radius = sqrt(x^2 + y^2),
+    radius = radius * 1.3,  # Uniform radial expansion for spacing
+    radius = case_when(
+      type == "Diet" ~ radius * 1.05,  # Slightly more outward for diets
+      type == "Bat"  ~ radius * 0.95,  # Slightly less for bats
+      TRUE ~ radius
+    ),
+    x = radius * cos(angle),
+    y = radius * sin(angle)
+  )
+
+# --- Plot Settings ----
+labelsize <- 3.5
+edgecol <- "gray70"
+edgewd <- 0.6
+edgealpha <- 0.5
+batshp <- 17
+batcol <- "turquoise3"
+dietshp <- 16
+dietcol <- "orchid"
+node_sizerange <- c(2, 6)
+title <- "Non-pteropotid bats and diet network\n(Node Size = Degree Centrality)"
+
+# --- Plot ----
+ggraph(npt_graph, layout = "manual", x = layout_df$x, y = layout_df$y) +
+  geom_edge_link(color = edgecol,
+                 alpha = edgealpha,
+                 width = edgewd,
+                 show.legend = FALSE) +
+  geom_node_point(aes(color = type,
+                      size = size,
+                      shape = type)) +
+  geom_node_text(aes(label = name),
+                 repel = TRUE,
+                 size = labelsize,
+                 family = "sans") +
+  scale_shape_manual(values = c("Bat" = batshp, "Diet" = dietshp)) +
+  scale_color_manual(values = c("Bat" = batcol, "Diet" = dietcol)) +
+  scale_size_continuous(range = node_sizerange, guide = "none") +
+  ggtitle(title) +
+  theme_void()
+
+# top 10 prey concentric rev 3 ----
+
+# --- Load Data ----
+# Choose "soibats_es_npt_dietls_v2_30012025.csv" when prompted
+npt_dt_v2 <- read_csv(file.choose())
+
+# --- Create Graph ----
+npt_graph <- tbl_graph(edges = npt_dt_v2, directed = FALSE) %>%
+  mutate(
+    type = ifelse(name %in% npt_dt_v2$sp, "Bat", "Diet"),
+    size = centrality_degree()
+  )
+
+# --- Prepare Node Data ---
+# Extract node data from graph
+node_df <- as_tibble(npt_graph, active = "nodes")
+
+# Identify top 10 prey nodes by degree (size)
+top_prey <- node_df %>%
+  filter(type == "Diet") %>%
+  arrange(desc(size)) %>%
+  head(10)
+
+# All other prey nodes
+other_prey <- node_df %>%
+  filter(type == "Diet" & !(name %in% top_prey$name))
+
+# Bat nodes remain as is
+bats <- node_df %>%
+  filter(type == "Bat")
+
+# --- Compute Custom Layout Positions ---
+# We use polar coordinates to assign nodes to layers:
+#   - Top Prey: small circle at center (radius ~0.5)
+#   - Bats: arranged on an intermediate circle (radius ~1.5)
+#   - Remaining Prey: on outer circle (radius ~3.0)
+
+# Function to assign positions on a circle given radius and number of nodes
+# takes the number of nodes from nrow of the df
+# angles holds a seq of equidistant angles from 0 to 2pi, equal to the number of nodes, i.e. n
+# create n+1 nodes, then remove the last node - seq() will have the first and last angles both in the sequence
+# but those two, first and last, will overlap in a circle, so you remove the n + 1th position angle from the seq 
+# x and y get the coordinates for the nodes to be plotted
+
+assign_circle <- function(df, radius) {
+  n <- nrow(df)
+  angles <- seq(0, 2*pi, length.out = n + 1)[- (n + 1)]
+  df %>% mutate(x = radius * cos(angles),
+                y = radius * sin(angles))
+}
+
+# Apply the function for each group with chosen radii:
+top_prey <- assign_circle(top_prey, radius = 0.5)
+bats     <- assign_circle(bats, radius = 1.5)
+other_prey <- assign_circle(other_prey, radius = 3.0)
+
+# --- Combine the Layout ---
+# Combine the three groups back together
+# store the coordinates, x and y, and other node attributes together
+new_layout <- bind_rows(top_prey, bats, other_prey)
+
+# Ensure that the layout ordering matches the original node order (by name)
+new_layout <- new_layout %>% arrange(match(name, node_df$name))
+
+# --- Plot Settings ---
+labelsize <- 3.5
+edgecol <- "gray58"
+edgewd <- 0.6
+edgealpha <- 0.3
+batshp <- 17
+batcol <- "turquoise3"
+dietshp <- 16
+dietcol <- "orchid"
+node_sizerange <- c(2, 6)
+title <- "Custom Network Layout\n(Top 10 Prey at Center, Bats in Middle, Rest of Prey Outer)"
+
+# --- Plot the Graph using Manual Layout ---
+ggraph(npt_graph, layout = "manual", x = new_layout$x, y = new_layout$y) +
+  geom_edge_link(color = edgecol, alpha = edgealpha, width = edgewd, show.legend = FALSE) +
+  geom_node_point(aes(color = type, size = size, shape = type)) +
+  geom_node_text(aes(label = name), repel = TRUE, size = labelsize) +
   scale_shape_manual(values = c("Bat" = batshp, "Diet" = dietshp)) +
   scale_color_manual(values = c("Bat" = batcol, "Diet" = dietcol)) +
   scale_size_continuous(range = node_sizerange, guide = "none") +
