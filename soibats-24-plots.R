@@ -7,13 +7,14 @@ pacman::p_load(pacman,
                tidygraph,
                ggraph,
                ggrepel,
+               ggalt,
                oaqc,
                taxize)
 
 # EB group - Overall - Data cleaning ----
 
 # import datasheet
-eb_basedt <- read_csv("eb_citations_data_v2.csv",
+eb_basedt <- read_csv("eb_citations_data_v3_10042025.csv",
                       skip = 1,
                       name_repair = "universal",
                       trim_ws = T)
@@ -22,7 +23,9 @@ View(eb_basedt)
 
 # assign unique id for joins
 eb_basedt <- eb_basedt %>% 
-  mutate(id = seq.int(1,nrow(eb_basedt),1))
+  mutate(id = seq.int(1,
+                      nrow(eb_basedt),
+                      1))
 
 ## long form categories ----
 eb_dt_cat <- eb_basedt %>%
@@ -31,9 +34,53 @@ eb_dt_cat <- eb_basedt %>%
                names_to = "category",
                values_drop_na = T) 
 
+# see which papers are mentioned in more than one category
 eb_dt_cat[which(duplicated(eb_dt_cat$id)),]
 
 View(eb_dt_cat)
+
+###  Revision to paper set ----
+## remove habitat category literature that isn't a direct field study 
+## (selection criteria explained elsewhere in report)
+
+eb_dt_cat_v2 <- eb_basedt %>%
+  select(citation:Toxicology,id, selected) %>% 
+  pivot_longer(cols = Diet:Toxicology,
+               names_to = "category",
+               values_drop_na = T)
+
+# see which papers are mentioned in more than one category
+eb_dt_cat_v2[which(duplicated(eb_dt_cat_v2$id)),]
+
+# total entries in dataset
+base_count <- nrow(eb_dt_cat_v2)
+
+# total number of habitat papers in the original set
+nrow(eb_dt_cat_v2[(eb_dt_cat_v2$category == "Habitat"),])
+
+# number of papers from habitat category that will be selected
+habitat_count_rev <- nrow(eb_dt_cat_v2[(eb_dt_cat_v2$category == "Habitat" & !(is.na(eb_dt_cat_v2$selected))), ])
+
+# list out (temporary) which habitat papers are being removed
+View(eb_dt_cat_v2[(eb_dt_cat_v2$category == "Habitat" & is.na(eb_dt_cat_v2$selected)),])
+
+# number of entries being filtered out
+removed_count <- nrow(eb_dt_cat_v2[(eb_dt_cat_v2$category == "Habitat" & is.na(eb_dt_cat_v2$selected)),]) ; message("subtract this number from the total number of entries, thats the expected reduced number of entries")
+
+# list the ID numbers of citations that got filtered out - to be used later
+removed_citations <- eb_dt_cat_v2$category == "Habitat" & is.na(eb_dt_cat_v2$selected)
+
+removed_ids <- eb_dt_cat_v2$id[removed_citations]
+
+# revise the paper set now
+# filter out (remove) entries that are habitat category and not NA for column named "selected" 
+
+eb_dt_cat_v3 <- eb_dt_cat_v2 %>% 
+  filter(!(category == "Habitat" & is.na(selected)))
+
+base_count ; removed_count ; nrow(eb_dt_cat_v3)
+# see to it that this revised number of entries is the expected reduced number
+
 ## long form states (location) ----
 eb_dt_location <- eb_basedt %>% 
   select(citation,Andaman.and.Nicobar.Islands:West.Bengal,id) %>% 
@@ -43,14 +90,13 @@ eb_dt_location <- eb_basedt %>%
 
 View(eb_dt_location)
 
-
 # check for duplicated entries
 
 nrow(eb_dt_location)
 View(eb_dt_location[which(duplicated(eb_dt_location$id)),])
 nrow(eb_dt_location) - count(eb_dt_location[which(duplicated(eb_dt_location$id)),])
 
-# check for missing citation IDs
+# check for citations that are missing, by their IDs, by comparing which ID numebrs in the series are missing in the list
 
 # takes the ID numbers from the table, compares to a seq of all numbers b/w min and max
 # this works here because the seq starts from one - elsewhere, if need be, generate a seq from the first desired number to the last manually and compare to seq from data source
@@ -62,7 +108,9 @@ idchk_seq <- eb_dt_location$id
 idchk_seq2 <- min(eb_dt_location$id):max(eb_dt_location$id)
 idchk_seq2[!idchk_seq2 %in% idchk_seq]
 
-# missing are OK for eb_citations_data_v2, location not applicable for missing IDs
+# missing IDs are OK for eb_citations_data_v2, location not applicable for missing IDs
+# Missing IDs OK for as well as eb_citations_data_v3_10042025 as well
+
 
 ## long form year of study ----
 eb_dt_year <- eb_basedt %>% 
@@ -79,26 +127,67 @@ eb_dt_year$year <- format(as.Date(eb_dt_year$year,
 
 # id 17 is a pre-print, assigned the year 2024 given its year of upload
 
-# check any missing citation ID 
-
 # check any missing citation ID
 
 idchk_seq <- eb_dt_year$id
 idchk_seq2 <- min(eb_dt_year$id):max(eb_dt_year$id)
-idchk_seq2[!idchk_seq2 %in% idchk_seq]
+idchk_seq2[!idchk_seq2 %in% idchk_seq] ; message("desired output of above line is integer[0]; Year should not be missing for citations")
 
-# desired output of above chunk is integer[0]; If any are missing, those IDs will show instead. Year should not be missing for citations
+# If any are missing, those IDs will show instead
 
-## join tables - id column is key ----
+## Join tables - id column is key ----
 
-ebd_join_catloc <- full_join(eb_dt_cat,eb_dt_location,"id")
+ebd_join_catloc <- full_join(eb_dt_cat_v3,eb_dt_location,"id") # ignore the many to many warning
+
+## Match IDs of habitat citations removed at the category stage to the IDs that show up as NA on category
+# See that only those are removed at the next step
+
+removed_matcher <- is.na(ebd_join_catloc$category)
+
+removed_matcher_ids <- unique(ebd_join_catloc$id[removed_matcher])
+
+setdiff(removed_ids,removed_matcher_ids) ; message("It is expected to get 133 as output, that ID will not match. This citation is filtered out at category stage and has no location, so it gets removed at category stage and the ID is recorded, but it gets removed at the location stage as well, those IDs are not recorded so it hits as a non matched ID. Any other number here is a problem, check")
+
+# clean up the combined citation dataset now
 ebd_join_catloc <- ebd_join_catloc %>% select(id,citation.x,category,location)
 
-ebd_join_complete <- left_join(ebd_join_catloc,eb_dt_year,"id")
+# remove rows with category as NA, these are the habitat category papers intended to be filtered out
+
+# base entry count
+rowcount_base <- nrow(ebd_join_catloc)
+
+# number of entries removed
+rowcount_rm <- nrow(ebd_join_catloc[is.na(ebd_join_catloc$category),])
+
+# remove entries
+ebd_join_catloc_v2 <- ebd_join_catloc %>% 
+  filter(!(is.na(category)))
+
+# entries before, entries removed, revised entries count
+rowcount_base ; rowcount_rm ; nrow(ebd_join_catloc_v2)
+
+# add year data
+ebd_join_complete <- left_join(ebd_join_catloc_v2,eb_dt_year,"id")
+
+# compare citations IDs of this dataset with the IDs of removed citations
+
+# see that number of non-matching IDS here are the same as the number of removed IDs at category stage
+NROW(removed_ids) ; NROW(setdiff(removed_ids, ebd_join_complete$id))
+
+# check none of the removed IDs are in the new dataset
+removed_ids %in% ebd_join_complete$id ; message("expected all elements to output false")
+
+# check if any other ID is missing from the list
+seq <- seq(min(ebd_join_complete$id),
+           max(ebd_join_complete$id),
+           1)
+
+excl_IDS <- setdiff(seq,ebd_join_complete$id)
+
+setdiff(removed_ids,excl_IDS); message("Expected to see 138 as output. The test seq in the previous step takes min and max of the revised dataset that ends at 137 entries, ID 138 is beyond the revised min:max range, was removed at category stage, so, expected to be an unmatched element here, ignore. Check for any other numbers appearing here")
 
 # check if both citations columns are identical
-identical(ebd_join_complete$citation.x,ebd_join_complete$citation)
-# intended output is TRUE
+identical(ebd_join_complete$citation.x,ebd_join_complete$citation) ; message("intended output is TRUE")
 
 # minor correction
 ebd_join_complete$category <- str_replace_all(ebd_join_complete$category,
@@ -133,6 +222,9 @@ ebd %>%
   unique() %>% 
   View()
 
+# revised expected number of papers in habitat category should match this variable below
+habitat_count_rev
+
 ebd$year <- as.factor(ebd$year)
 
 ## plotting ----
@@ -161,35 +253,50 @@ View(pub_cumsum)
 
 
 ## variable declarations for tweaks ----
-lwd = 1
 
 # plot 
-ggplot(pub_cumsum,aes(year,pub_cumsum, group = category, colour = category)) +
-  geom_line(linewidth = lwd)+
+ggplot(pub_cumsum,aes(year,pub_cumsum,
+                      group = category,
+                      colour = category,
+                      linetype = category,
+                      linewidth = category)) +
+  geom_line()+
   labs(x = "Year of Publication",
        y = "Cumulative number of publications")+
-  theme_classic()
-
-View(pub_years)
-
-pub_cumsum <- pub_years %>% 
-  ungroup() %>% 
-  group_by(category) %>% 
-  mutate(pub_cumsum = cumsum(pub_count))
-
-View(pub_cumsum)
-
-# tweaks - variable declarations
-lwd = 1
-
-# Year-wise publication trends by categories - cumulative
-ggplot(pub_cumsum,aes(year,pub_cumsum,group = category, colour = category)) +
-  geom_line(linewidth = lwd)+
-  labs(x = "Year of Publication", y = "Cumulative number of publications")+
-  theme_classic()
+  scale_linetype_manual(values = c(1:4,6),
+                        labels = c("Diet",
+                                   "Disease Ecology and Health",
+                                   "Habitat",
+                                   "Movement Ecology",
+                                   "Toxicology"),
+                        name = "Category")+
+  scale_linewidth_manual(values = c(0.9,0.9,0.9,1.1,1.1),
+                         labels = c("Diet",
+                                    "Disease Ecology and Health",
+                                    "Habitat",
+                                    "Movement Ecology",
+                                    "Toxicology"),
+                         name = "Category")+
+  scale_color_manual(values = c("violet",
+                                "darkgray",
+                                "steelblue",
+                                "cyan",
+                                "orange"),
+                     labels = c("Diet",
+                                "Disease Ecology and Health",
+                                "Habitat",
+                                "Movement Ecology",
+                                "Toxicology"),
+                     name = "Category")+
+  theme_classic()+
+  theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 11),
+        axis.text.x = element_text(angle = 40, hjust = 0.9, vjust = 0.9),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14, hjust = 0.5))
 
 # State-wise heatmap (hm) - formatting data for QGIS - state names made to match the shapefile names ----
-eb_hmdt <- eb_dt_location %>% 
+eb_hmdt <- ebd %>% 
   select(id,location) %>% 
   group_by(location) %>% 
   mutate(pub_count = n()) %>% 
@@ -198,7 +305,7 @@ eb_hmdt <- eb_dt_location %>%
   arrange(desc(pub_count)) %>% 
   mutate(location = str_replace_all(location,"\\."," ")) %>%
   mutate(location = str_replace_all(location,"Andaman and Nicobar Islands", "Andaman & Nicobar")) %>% 
-  write_csv("eb_heatmap_dt.csv")
+  write_csv("eb_heatmap_dt_v2_11042025.csv")
 
 # Ecosystem services network - Data clean up ----
 
