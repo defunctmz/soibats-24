@@ -253,34 +253,19 @@ View(pub_cumsum)
 
 
 ## variable declarations for tweaks ----
+lwd = 0.8
 
 # plot 
 ggplot(pub_cumsum,aes(year,pub_cumsum,
                       group = category,
-                      colour = category,
-                      linetype = category,
-                      linewidth = category)) +
-  geom_line()+
+                      colour = category)) +
+  geom_line(linewidth = lwd)+
   labs(x = "Year of Publication",
        y = "Cumulative number of publications")+
-  scale_linetype_manual(values = c(1:4,6),
-                        labels = c("Diet",
-                                   "Disease Ecology and Health",
-                                   "Habitat",
-                                   "Movement Ecology",
-                                   "Toxicology"),
-                        name = "Category")+
-  scale_linewidth_manual(values = c(0.9,0.9,0.9,1.1,1.1),
-                         labels = c("Diet",
-                                    "Disease Ecology and Health",
-                                    "Habitat",
-                                    "Movement Ecology",
-                                    "Toxicology"),
-                         name = "Category")+
   scale_color_manual(values = c("violet",
-                                "darkgray",
                                 "steelblue",
-                                "cyan",
+                                "darkgray",
+                                "turquoise",
                                 "orange"),
                      labels = c("Diet",
                                 "Disease Ecology and Health",
@@ -291,7 +276,11 @@ ggplot(pub_cumsum,aes(year,pub_cumsum,
   theme_classic()+
   theme(axis.title = element_text(size = 14),
         axis.text = element_text(size = 11),
-        axis.text.x = element_text(angle = 40, hjust = 0.9, vjust = 0.9),
+        axis.text.x = element_text(angle = 40,
+                                   hjust = 0.9,
+                                   vjust = 0.9),
+        axis.title.x = element_text(vjust = -0.5),
+        axis.title.y = element_text(vjust = 2),
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14, hjust = 0.5))
 
@@ -488,7 +477,7 @@ batshp = 17 ; batcol = "turquoise"
 dietshp = 16 ; dietcol = "violet"
 node_sizerange = c(2,6)
 title = "Pteropotid Bats and diet network (Node Size = Number of Connections)"
-
+legend_lbl = "Node Type"
 ## plot ----
 ggraph(pt_graph,
        layout = layout) +
@@ -503,13 +492,19 @@ ggraph(pt_graph,
                  repel = T,
                  size = labelsize) +
   scale_shape_manual(values = c("Bat" = batshp,
-                                 "Diet" = dietshp)) +
+                                 "Diet" = dietshp),
+                     name = legend_lbl) +
   scale_color_manual(values = c("Bat" = batcol,
-                                "Diet" = dietcol)) +
+                                "Diet" = dietcol),
+                     name = legend_lbl) +
   scale_size_continuous(range = node_sizerange,
-                        guide = "none") + # Adjust node size scale 
-  ggtitle(title) +
-  theme_void()
+                        guide = "none") + # Adjust node size scale
+  theme_void() +
+  theme(legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.key.spacing = unit(8, "pt"),
+        legend.box.spacing = unit(0, "pt")) +
+  guides(color = guide_legend(override.aes = list(size = 2.5))) # change legend icons with size
 
 # Non pteropotid network - clean up ----
 npt_dt <- read_csv(file.choose()) 
@@ -588,9 +583,8 @@ ggraph(npt_graph,
                         guide = "none") + # Adjust node size scale 
   ggtitle(title) +
   theme_void()
-  
-# NPT Revised ----
 
+## Data revisions ----
 unique(npt_dt$diet)
 
 # replace non insect diet items to grouped taxa
@@ -630,18 +624,31 @@ View()
 # write updated file
 write_csv(npt_dt_v2,"soibats_es_npt_dietls_v2_30012025.csv")
 
+# minor revision 
+
+# combine rhinopomma microphyllum and rhinopoma m kinneari as one sp, reclassify diet items 
+npt_dt_v3 <- npt_dt_v2 %>% 
+  mutate(sp = if_else(sp == "Rhinopoma microphyllum kinneari",
+                      "Rhinopoma microphyllum",
+                      sp)) %>% 
+  unique()
+
+# write updated file
+write_csv(npt_dt_v3,"soibats_es_npt_dietls_v3_02052025.csv")
+
+# NPT Revised ----
 ### graph ----
 
-npt_dt_v2 <- read_csv(file.choose()) # choose "soibats_es_npt_dietls_v2_30012025.csv"
- 
-npt_graph <- tbl_graph(edges = npt_dt_v2, directed = F)
+npt_dt_v3 <- read_csv(file.choose()) # choose "soibats_es_npt_dietls_v3_02052025.csv"
+
+npt_graph <- tbl_graph(edges = npt_dt_v3, directed = F)
 
 npt_graph <- npt_graph %>% 
-  mutate(type = ifelse(name %in% npt_dt_v2$sp, "Bat", "Diet"),
+  mutate(type = ifelse(name %in% npt_dt_v3$sp, "Bat", "Diet"),
          size = centrality_degree())
 
 # check for size attribute being correctly calculated
-npt_dt_v2 %>%
+npt_dt_v3 %>%
   group_by(diet) %>% 
   mutate(count = n()) %>% 
   arrange(desc(count)) %>% 
@@ -690,197 +697,16 @@ ggraph(npt_graph,
   ggtitle(title) +
   theme_void()
 
-# test revisions ----
-## manual concentric layout ---- 
-
-# Get node data
-nodes <- as_tibble(npt_graph, active = "nodes")
-nodes <- nodes %>% mutate(id = row_number())
-
-# Separate bats and diet items
-bats <- nodes %>% filter(type == "Bat") %>% arrange(desc(size))
-diet <- nodes %>% filter(type == "Diet")
-
-# Number of each
-n_bats <- nrow(bats)
-n_diet <- nrow(diet)
-
-# Assign inner circle layout for diet nodes
-diet$angle <- seq(0, 2 * pi, length.out = n_diet + 1)[- (n_diet + 1)]
-diet$x <- cos(diet$angle) * 1
-diet$y <- sin(diet$angle) * 1
-
-# Assign outer circle layout for bats (sorted by degree)
-bats$angle <- seq(0, 2 * pi, length.out = n_bats + 1)[- (n_bats + 1)]
-bats$x <- cos(bats$angle) * 2
-bats$y <- sin(bats$angle) * 2
-
-# Combine layout data
-layout_df <- bind_rows(diet, bats) %>%
-  arrange(id) %>%
-  select(x, y)
-
-# Plot using manual layout
-ggraph(npt_graph, layout = "manual", x = layout_df$x, y = layout_df$y) +
-  geom_edge_link(aes(edge_alpha = edgealpha),
-                 color = edgecol,
-                 width = edgewd,
-                 show.legend = FALSE) +
-  geom_node_point(aes(color = type, 
-                      size = size,
-                      shape = type)) +
-  geom_node_text(aes(label = name),
-                 repel = TRUE,
-                 size = labelsize) +
-  scale_shape_manual(values = c("Bat" = batshp, "Diet" = dietshp)) +
-  scale_color_manual(values = c("Bat" = batcol, "Diet" = dietcol)) +
-  scale_size_continuous(range = node_sizerange, guide = "none") +
-  ggtitle(title) +
-  theme_void()
-
-## bats inwards rev ----
-
-# --- Load Data
-npt_dt_v2 <- read_csv(file.choose())  # Choose "soibats_es_npt_dietls_v2_30012025.csv"
-
-# --- Create Graph
-npt_graph <- tbl_graph(edges = npt_dt_v2, directed = FALSE) %>%
-  mutate(
-    type = ifelse(name %in% npt_dt_v2$sp, "Bat", "Diet"),
-    size = centrality_degree()
-  )
-
-# --- Layout: KK Layout 
-set.seed(1)
-kk_layout <- layout_with_kk(as.igraph(npt_graph))
-
-# Combine layout with node metadata
-layout_df <- as_tibble(kk_layout) %>%
-  rename(x = V1, y = V2) %>%
-  bind_cols(as_tibble(npt_graph, active = "nodes"))
-
-# --- Radial Adjustment: Mild push/pull for clarity
-layout_df <- layout_df %>%
-  mutate(
-    angle = atan2(y, x),
-    radius = sqrt(x^2 + y^2),
-    radius = case_when(
-      type == "Diet" ~ radius * 1.15,  # Slight push
-      type == "Bat"  ~ radius * 0.9,   # Slight pull inward
-      TRUE ~ radius
-    ),
-    x = radius * cos(angle),
-    y = radius * sin(angle)
-  )
-
-# --- Plot Settings
-labelsize <- 3.5
-edgecol <- "gray70"
-edgewd <- 0.6
-edgealpha <- 0.5
-batshp <- 17
-batcol <- "turquoise3"
-dietshp <- 16
-dietcol <- "orchid"
-node_sizerange <- c(2, 6)
-title <- "Non-pteropotid bats and diet network\n(Node Size = Degree Centrality)"
-
-# --- Plot
-ggraph(npt_graph, layout = "manual", x = layout_df$x, y = layout_df$y) +
-  geom_edge_link(color = edgecol,
-                 alpha = edgealpha,
-                 width = edgewd,
-                 show.legend = FALSE) +
-  geom_node_point(aes(color = type,
-                      size = size,
-                      shape = type)) +
-  geom_node_text(aes(label = name),
-                 repel = TRUE,
-                 size = labelsize,
-                 family = "sans") +
-  scale_shape_manual(values = c("Bat" = batshp, "Diet" = dietshp)) +
-  scale_color_manual(values = c("Bat" = batcol, "Diet" = dietcol)) +
-  scale_size_continuous(range = node_sizerange, guide = "none") +
-  ggtitle(title) +
-  theme_void()
-
-# bats inwards rev 2 - spacing increase ----
-
-# --- Load Data
-npt_dt_v2 <- read_csv(file.choose())  # Choose "soibats_es_npt_dietls_v2_30012025.csv"
-
-# --- Create Graph
-npt_graph <- tbl_graph(edges = npt_dt_v2, directed = FALSE) %>%
-  mutate(
-    type = ifelse(name %in% npt_dt_v2$sp, "Bat", "Diet"),
-    size = centrality_degree()
-  )
-
-# --- Layout: KK ----
-set.seed(1)
-kk_layout <- layout_with_kk(as.igraph(npt_graph))
-
-layout_df <- as_tibble(kk_layout) %>%
-  rename(x = V1, y = V2) %>%
-  bind_cols(as_tibble(npt_graph, active = "nodes"))
-
-# --- Radial Adjustment with Overall Spacing ----
-# Gently scale all nodes outward, and slightly emphasize diet vs. bat spacing
-layout_df <- layout_df %>%
-  mutate(
-    angle = atan2(y, x),
-    radius = sqrt(x^2 + y^2),
-    radius = radius * 1.3,  # Uniform radial expansion for spacing
-    radius = case_when(
-      type == "Diet" ~ radius * 1.05,  # Slightly more outward for diets
-      type == "Bat"  ~ radius * 0.95,  # Slightly less for bats
-      TRUE ~ radius
-    ),
-    x = radius * cos(angle),
-    y = radius * sin(angle)
-  )
-
-# --- Plot Settings ----
-labelsize <- 3.5
-edgecol <- "gray70"
-edgewd <- 0.6
-edgealpha <- 0.5
-batshp <- 17
-batcol <- "turquoise3"
-dietshp <- 16
-dietcol <- "orchid"
-node_sizerange <- c(2, 6)
-title <- "Non-pteropotid bats and diet network\n(Node Size = Degree Centrality)"
-
-# --- Plot ----
-ggraph(npt_graph, layout = "manual", x = layout_df$x, y = layout_df$y) +
-  geom_edge_link(color = edgecol,
-                 alpha = edgealpha,
-                 width = edgewd,
-                 show.legend = FALSE) +
-  geom_node_point(aes(color = type,
-                      size = size,
-                      shape = type)) +
-  geom_node_text(aes(label = name),
-                 repel = TRUE,
-                 size = labelsize,
-                 family = "sans") +
-  scale_shape_manual(values = c("Bat" = batshp, "Diet" = dietshp)) +
-  scale_color_manual(values = c("Bat" = batcol, "Diet" = dietcol)) +
-  scale_size_continuous(range = node_sizerange, guide = "none") +
-  ggtitle(title) +
-  theme_void()
-
-# top 10 prey concentric rev 3 ----
+# Top prey concentric rings version ----
 
 # --- Load Data ----
-# Choose "soibats_es_npt_dietls_v2_30012025.csv" when prompted
-npt_dt_v2 <- read_csv(file.choose())
+# choose "soibats_es_npt_dietls_v3_02052025.csv"
+npt_dt_v3 <- read_csv(file.choose()) 
 
 # --- Create Graph ----
-npt_graph <- tbl_graph(edges = npt_dt_v2, directed = FALSE) %>%
+npt_graph <- tbl_graph(edges = npt_dt_v3, directed = FALSE) %>%
   mutate(
-    type = ifelse(name %in% npt_dt_v2$sp, "Bat", "Diet"),
+    type = ifelse(name %in% npt_dt_v3$sp, "Bat", "Diet"),
     size = centrality_degree()
   )
 
@@ -943,20 +769,39 @@ edgealpha <- 0.3
 batshp <- 17
 batcol <- "turquoise3"
 dietshp <- 16
-dietcol <- "orchid"
+dietcol <- "violet"
 node_sizerange <- c(2, 6)
 title <- "Custom Network Layout\n(Top 10 Prey at Center, Bats in Middle, Rest of Prey Outer)"
-
+legend_lbl = "Node Type"
 # --- Plot the Graph using Manual Layout ---
-ggraph(npt_graph, layout = "manual", x = new_layout$x, y = new_layout$y) +
-  geom_edge_link(color = edgecol, alpha = edgealpha, width = edgewd, show.legend = FALSE) +
-  geom_node_point(aes(color = type, size = size, shape = type)) +
-  geom_node_text(aes(label = name), repel = TRUE, size = labelsize) +
-  scale_shape_manual(values = c("Bat" = batshp, "Diet" = dietshp)) +
-  scale_color_manual(values = c("Bat" = batcol, "Diet" = dietcol)) +
+ggraph(npt_graph,
+       layout = "manual",
+       x = new_layout$x,
+       y = new_layout$y) +
+  geom_edge_link(color = edgecol,
+                 alpha = edgealpha,
+                 width = edgewd,
+                 show.legend = FALSE) +
+  geom_node_point(aes(color = type,
+                      size = size,
+                      shape = type)) +
+  geom_node_text(aes(label = name),
+                 repel = TRUE,
+                 size = labelsize) +
+  scale_shape_manual(values = c("Bat" = batshp,
+                                "Diet" = dietshp),
+                     name = legend_lbl) +
+  scale_color_manual(values = c("Bat" = batcol,
+                                "Diet" = dietcol),
+                     name = legend_lbl) +
   scale_size_continuous(range = node_sizerange, guide = "none") +
-  ggtitle(title) +
-  theme_void()
+  #ggtitle(title) + # add title if needed
+  theme_void() +
+  theme(legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.key.spacing = unit(8, "pt"),
+        legend.box.spacing = unit(0, "pt")) +
+  guides(color = guide_legend(override.aes = list(size = 2.5))) # change legend icons with size
 
 # Taxonomy -----
 
@@ -980,7 +825,7 @@ tx_dt_csum <- tx_dt %>%
 
 ## vars ----   
 lwd = 0.8
-col = "darkgreen"
+col = "darkturquoise"
 ## plot ----
 
 ggplot(tx_dt_csum,aes(year,
@@ -1037,7 +882,7 @@ cs_fig1 <- cs_fig1 %>%
 ## time series line graph ----
 
 ## vars ----
-ibpcol =  "steelblue"
+ibpcol =  "darkturquoise"
 inatcol = "violet"
 
 # plot
@@ -1055,7 +900,10 @@ ggplot(cs_fig1,
        y = "Cumulative number of observations") +
   theme_classic() +
   theme(axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12))
+        axis.title.y = element_text(vjust = 1),
+        axis.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12))
   
 # Fig 2 cit-sci ----
 
@@ -1071,7 +919,7 @@ cs_fig2 <- cs_fig2_dt %>%
                values_to = "count")
 
 ## vars ----
-ibpcol =  "steelblue"
+ibpcol =  "darkturquoise"
 inatcol = "violet"
 
 ## plot ----
@@ -1089,8 +937,8 @@ ggplot(cs_fig2,
   labs(x = "Month",
        y = "Number of observations (1994-2024)") +
   theme_classic() + 
-  theme(axis.text.x = element_text(angle = 45,
-                                   vjust = 0.5,
+  theme(axis.text.x = element_text(angle = 30,
+                                   vjust = 0.6,
                                    hjust = 0.5),
         axis.title = element_text(size = 14),
         axis.text = element_text(size = 12),
@@ -1124,79 +972,81 @@ ggplot(cs_fig2_dtmerge,
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14))
 
-# Fig 5 Proportion of representation of bat taxa in datasets (by family) ----
 
-## - data input ----
-
-cs_fig5_masterlist_dt <- read_csv(file.choose())
-# use "cs_fig5_sp_master_list_18032025.csv"
-# this will be used to derive the number of species in each family present in India
-
-## IBP data ----
-
-ibp_raw <- read_csv(file.choose()) # use file name "IBP-withmedia-raw-24012025.csv" here
-
-ibp_dt <- ibp_raw %>% 
-  select(catalogNumber,
-         locationLat,
-         locationLon,
-         rank,
-         scientificName,
-         order:genus) %>% 
-  mutate(database = "ibp")
-
-## iNat data ----
-
-inat_raw <- read_csv(file.choose()) # use file name "Inat-raw-24012025.csv" here
-
-# processing - combining the two datasets into one larger set 
-
-inat_dt <- inat_raw %>% 
-  select(id,
-         quality_grade,
-         latitude,
-         longitude,
-         scientific_name,
-         taxon_id) %>% 
-  mutate(database = "inat")
-
-csci_occ_dt <- bind_rows(ibp_dt,inat_dt)
-
-csci_occ_dt <- csci_occ_dt %>%
-  mutate(id = if_else(database == "ibp", catalogNumber, id)) %>%
-  mutate(latitude = if_else(database == "ibp", locationLat, latitude)) %>%
-  mutate(longitude = if_else(database == "ibp", locationLon, longitude)) %>%
-  mutate(scientific_name = if_else(database == "ibp", scientificName, scientific_name)) %>%
-  select(database,
-         id,
-         latitude,
-         longitude,
-         scientific_name,
-         rank,
-         taxon_id)
-
-write_csv(csci_occ_dt,"csci_occ_dt_27012025.csv")
-
-## combined datasheet input ----
-
-cs_fig5_datasets_dt <- read_csv(file.choose())
-# use "csci_occ_dt_27012025.csv" 
-
-## Explainer ---- 
-# steps below - 
-# filter out unique taxon names
-# fetch family names then to get a list of species names with families recorded in the two datasets
-# total up numbers by family names to get the proportions
-# Match these numbers to the number of species in each family reported as in the master list for the country 
-
-cs_fig5_sp_family <-  cs_fig5_datasets_dt %>% 
-  select(scientific_name) %>% 
-  group_by(scientific_name) %>% 
-  mutate(obs_count = n()) %>% 
-  unique()
-  
-# using package taxise to fetch family names from scientific names
-
-cs_fig5_sp_family$family <- tax_name(sci = cs_fig5_sp_family$scientific_name,
-                                 get = "family",
-                                 db = "itis")
+# # Dropped
+# # Fig 5 Proportion of representation of bat taxa in datasets (by family) ----
+# 
+# ## - data input ----
+# 
+# cs_fig5_masterlist_dt <- read_csv(file.choose())
+# # use "cs_fig5_sp_master_list_18032025.csv"
+# # this will be used to derive the number of species in each family present in India
+# 
+# ## IBP data ----
+# 
+# ibp_raw <- read_csv(file.choose()) # use file name "IBP-withmedia-raw-24012025.csv" here
+# 
+# ibp_dt <- ibp_raw %>% 
+#   select(catalogNumber,
+#          locationLat,
+#          locationLon,
+#          rank,
+#          scientificName,
+#          order:genus) %>% 
+#   mutate(database = "ibp")
+# 
+# ## iNat data ----
+# 
+# inat_raw <- read_csv(file.choose()) # use file name "Inat-raw-24012025.csv" here
+# 
+# # processing - combining the two datasets into one larger set 
+# 
+# inat_dt <- inat_raw %>% 
+#   select(id,
+#          quality_grade,
+#          latitude,
+#          longitude,
+#          scientific_name,
+#          taxon_id) %>% 
+#   mutate(database = "inat")
+# 
+# csci_occ_dt <- bind_rows(ibp_dt,inat_dt)
+# 
+# csci_occ_dt <- csci_occ_dt %>%
+#   mutate(id = if_else(database == "ibp", catalogNumber, id)) %>%
+#   mutate(latitude = if_else(database == "ibp", locationLat, latitude)) %>%
+#   mutate(longitude = if_else(database == "ibp", locationLon, longitude)) %>%
+#   mutate(scientific_name = if_else(database == "ibp", scientificName, scientific_name)) %>%
+#   select(database,
+#          id,
+#          latitude,
+#          longitude,
+#          scientific_name,
+#          rank,
+#          taxon_id)
+# 
+# write_csv(csci_occ_dt,"csci_occ_dt_27012025.csv")
+# 
+# ## combined datasheet input ----
+# 
+# cs_fig5_datasets_dt <- read_csv(file.choose())
+# # use "csci_occ_dt_27012025.csv" 
+# 
+# ## Explainer ---- 
+# # steps below - 
+# # filter out unique taxon names
+# # fetch family names then to get a list of species names with families recorded in the two datasets
+# # total up numbers by family names to get the proportions
+# # Match these numbers to the number of species in each family reported as in the master list for the country 
+# 
+# cs_fig5_sp_family <-  cs_fig5_datasets_dt %>% 
+#   select(scientific_name) %>% 
+#   group_by(scientific_name) %>% 
+#   mutate(obs_count = n()) %>% 
+#   unique()
+#   
+# # using package taxise to fetch family names from scientific names
+# 
+# cs_fig5_sp_family$family <- tax_name(sci = cs_fig5_sp_family$scientific_name,
+#                                  get = "family",
+#                                  db = "itis")
