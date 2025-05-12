@@ -1,5 +1,5 @@
 # Packages ----
-# Install pacman if not available to load required pkgs in one go
+# Install pacman if not available to load required pkgs at once
 install.packages("pacman")
 
 # Load listed packages (except  pacman) individually if pacman gives issues
