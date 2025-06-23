@@ -444,7 +444,8 @@ pt_edges <- as_tibble(pt_graph, active = "edges") ; View(pt_edges)
 #   mutate(cluster = as.factor(membership(pt_communities)))
 
 # layout to make nodes with higher centrality plotted towards the center of the graph
-set.seed(0) # make sure to run set seed with zero before each run for exaact reproduction
+
+set.seed(0) # make sure to run set seed with zero before each run for exact reproduction
 layout_centrality <- layout_with_kk(as.igraph(pt_graph),
                                     weights = E(as.igraph(pt_graph))$weight)
 
@@ -469,8 +470,9 @@ ggraph(pt_graph,
   geom_node_point(aes(color = type, # color by type, bat or prey
                       size = size, # size by number of connections
                       shape = type)) +  # shape by cluster
-  geom_node_text(aes(label = name), # label by name
-                 repel = T,
+  geom_node_text(aes(label = paste0("italic('", name, "')")), # label by name, italicised
+                 parse = TRUE,
+                 repel = TRUE,
                  size = labelsize) +
   scale_shape_manual(values = c("Bat" = batshp,
                                  "Diet" = dietshp),
@@ -487,7 +489,7 @@ ggraph(pt_graph,
         legend.box.spacing = unit(0, "pt")) +
   guides(color = guide_legend(override.aes = list(size = 2.5))) # change legend icons with size
 
-# ES - NonPteropotid Network - Clean up ----
+# ES - Non-Pteropotid Network - Clean up ----
 npt_dt <- read_csv(file.choose()) # use Non_Pteropodid_v1_20250111.csv 
 
 str(npt_dt) # Check the structure of the dataset
@@ -559,6 +561,16 @@ npt_dt_v3 <- npt_dt_v2 %>%
                       sp)) %>% 
   unique()
 
+# slight name revisions - Pipistrillus to Pipistrellus
+npt_dt_v3 <- npt_dt_v3 %>% 
+  mutate(sp = if_else(sp == "Pipistrillus coromandra",
+                      "Pipistrellus coromandra",
+                      sp)) %>% 
+  mutate(sp = if_else(sp == "Pipistrillus mimus",
+                      "Pipistrellus tenuis",
+                      sp))
+  
+
 # write updated file
 write_csv(npt_dt_v3,"soibats_es_npt_dietls_v3_02052025.csv")
 
@@ -597,7 +609,7 @@ bats <- node_df %>%
 
 ### Compute Node Positions ----
 
-# We use polar coordinates to assign nodes to layers:
+# Use polar coordinates to assign nodes to layers:
 #   - Top Prey: small circle at center (radius ~0.5)
 #   - Bats: arranged on an intermediate circle (radius ~1.5)
 #   - Remaining Prey: on outer circle (radius ~3.0)
@@ -619,7 +631,7 @@ assign_circle <- function(df, radius) {
 # Apply the function for each group with chosen radii:
 top_prey <- assign_circle(top_prey, radius = 0.5)
 bats     <- assign_circle(bats, radius = 1.5)
-other_prey <- assign_circle(other_prey, radius = 3.0)
+other_prey <- assign_circle(other_prey, radius = 2.5)
 
 ### Define Layout ----
 
@@ -655,7 +667,8 @@ ggraph(npt_graph,
   geom_node_point(aes(color = type,
                       size = size,
                       shape = type)) +
-  geom_node_text(aes(label = name),
+  geom_node_text(aes(label = ifelse(type == "Bat", paste0("italic('", name, "')"), name)),
+                 parse = TRUE, # required for label to be parsed as an expression, for italic function to work
                  repel = TRUE,
                  size = labelsize) +
   scale_shape_manual(values = c("Bat" = batshp,
