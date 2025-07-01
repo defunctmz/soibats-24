@@ -3,16 +3,16 @@
 install.packages("pacman")
 
 # Load listed packages (except  pacman) individually if pacman gives issues
-pacman::p_load(pacman,
+pacman::p_load(pacman, # can be ignored
                tidyverse,
                lubridate,
                igraph,
                tidygraph,
                ggraph,
                ggrepel,
-               ggalt,
-               oaqc,
-               taxize) # taxize can be ignored
+               ggalt, # can be ignored
+               oaqc, # can be ignored
+               taxize) # can be ignored
 
 ## Throughout this script, datasets are loaded using file.choose() - the raw dataset files are available within the folders named raw_data_files and processed_data_files. At each line where a dataset is to be loaded, a comment mentions the name of the file to be used. Please select the files carefully 
 
@@ -268,7 +268,7 @@ label_df <- pub_cumsum %>% slice_max(order_by = pub_cumsum,
 lwd = 0.8
 
 ## Plot ----
-ggplot(pub_cumsum,aes(year,pub_cumsum,
+eb_fig1 <- ggplot(pub_cumsum,aes(year,pub_cumsum,
                       group = category,
                       colour = category)) +
   geom_line(linewidth = lwd)+
@@ -280,8 +280,8 @@ ggplot(pub_cumsum,aes(year,pub_cumsum,
                                 "turquoise",
                                 "orange"),
                      labels = c("Diet",
-                                "Disease Ecology and Health",
-                                "Habitat",
+                                "Disease Ecology",
+                                "Habitat Use",
                                 "Movement Ecology",
                                 "Toxicology"),
                      name = "Category")+
@@ -291,8 +291,8 @@ ggplot(pub_cumsum,aes(year,pub_cumsum,
              size = 3) +
   scale_shape_manual(values = c(17:19,15,26), #ignore warning, one invalid pch value for shape given intentionally to create a void shape
                      labels = c("Diet",
-                                "Disease Ecology and Health",
-                                "Habitat",
+                                "Disease Ecology",
+                                "Habitat Use",
                                 "Movement Ecology",
                                 "Toxicology"),
                      name = "Category") +
@@ -306,6 +306,19 @@ ggplot(pub_cumsum,aes(year,pub_cumsum,
         axis.title.y = element_text(vjust = 2),
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14, hjust = 0.5))
+
+# implementing ggsave instead of image saving for consistency here - original figures weremade at below resolution
+
+ fig_width_pixels = 2159
+ fig_height_pixels = 1439
+ dpi = 172
+
+ggsave(filename = "eb_fig1_v3_01072025.png",
+       plot = eb_fig1,
+       width = fig_width_pixels/dpi,
+       height = fig_height_pixels/dpi,
+       units = "in",
+       dpi = dpi)
 
 # EB Heatmap data cleanup ----
 ## Formatting data for QGIS -----
