@@ -259,6 +259,12 @@ slice_max(pub_cumsum,
 
 # check pub_cumsum endpoint totals match that of category wise citations totals, code available above 
 
+# Review revision 02-10-2025 - Reorder the categories
+  
+# convert categories as factor
+pub_cumsum$category <- as_factor(pub_cumsum$category)
+
+# converting as factor seems to somehow give the desired order of factors already, so not doing it explicitly anymore
 
 ## Variables for tweaks ----
 
@@ -268,33 +274,34 @@ label_df <- pub_cumsum %>% slice_max(order_by = pub_cumsum,
 lwd = 0.8
 
 ## Plot ----
-eb_fig1 <- ggplot(pub_cumsum,aes(year,pub_cumsum,
+eb_fig1 <- ggplot(pub_cumsum,
+                  aes(year,pub_cumsum,
                       group = category,
                       colour = category)) +
   geom_line(linewidth = lwd)+
   labs(x = "Year of Publication",
        y = "Cumulative number of publications")+
-  scale_color_manual(values = c("violet",
-                                "steelblue",
+  scale_color_manual(values = c("steelblue",
+                                "violet",
+                                "orange",
                                 "darkgray",
-                                "turquoise",
-                                "orange"),
-                     labels = c("Diet",
-                                "Disease Ecology",
-                                "Habitat Use",
+                                "turquoise"),
+                     labels = c("Disease Ecology",
+                                "Diet",
                                 "Movement Ecology",
-                                "Toxicology"),
+                                "Toxicology",
+                                "Habitat Use"),
                      name = "Category")+
   geom_point(data = label_df,
              aes(shape = category,
              colour = category),
              size = 3) +
-  scale_shape_manual(values = c(17:19,15,26), #ignore warning, one invalid pch value for shape given intentionally to create a void shape
-                     labels = c("Diet",
-                                "Disease Ecology",
-                                "Habitat Use",
+  scale_shape_manual(values = c(17,15,26,8,19), #ignore warning, one invalid pch value for shape given intentionally to create a void shape
+                     labels = c("Disease Ecology",
+                                "Diet",
                                 "Movement Ecology",
-                                "Toxicology"),
+                                "Toxicology",
+                                "Habitat Use"),
                      name = "Category") +
   theme_classic()+
   theme(axis.title = element_text(size = 14),
@@ -307,18 +314,18 @@ eb_fig1 <- ggplot(pub_cumsum,aes(year,pub_cumsum,
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14, hjust = 0.5))
 
-# implementing ggsave instead of image saving for consistency here - original figures weremade at below resolution
+# implementing ggsave instead of image saving for consistency here - original figures were made at below resolution
 
  fig_width_pixels = 2159
  fig_height_pixels = 1439
  dpi = 172
 
-ggsave(filename = "eb_fig1_v3_01072025.png",
+ggsave(filename = "eb_fig1_v4_02102025.pdf",
        plot = eb_fig1,
-       width = fig_width_pixels/dpi,
-       height = fig_height_pixels/dpi,
-       units = "in",
-       dpi = dpi)
+       width = fig_width_pixels/dpi, # only for raster outputs
+       height = fig_height_pixels/dpi, # only for raster outputs
+       units = "in", 
+       dpi = dpi) # only for raster outputs
 
 # EB Heatmap data cleanup ----
 ## Formatting data for QGIS -----
@@ -583,21 +590,35 @@ npt_dt_v3 <- npt_dt_v3 %>%
                       "Pipistrellus tenuis",
                       sp))
   
-
 # write updated file
 write_csv(npt_dt_v3,"soibats_es_npt_dietls_v3_02052025.csv")
+
+# review revision 02/10/2025 - Rename some species
+npt_dt_v4 <- npt_dt_v3 %>% 
+  mutate(sp = if_else(sp =="Megaderma (Lyroderma) lyra",
+                      "Lyroderma lyra",
+                      sp)) %>%
+  mutate(sp = if_else(sp =="Pipistrellus coromandra",
+                      "Alionoctula coromandra",
+                      sp)) %>%
+  mutate(sp = if_else(sp =="Pipistrellus tenuis",
+                      "Alionoctula tenuis",
+                      sp))
+
+# write updated file
+write_csv(npt_dt_v4,"soibats_es_npt_dietls_v4_02102025.csv")
 
 ## Plot - Top prey concentric rings version ----
 
 ### Load Data ----
 
-# choose "soibats_es_npt_dietls_v3_02052025.csv"
-npt_dt_v3 <- read_csv(file.choose()) 
+# choose "soibats_es_npt_dietls_v4_02102025.csv"
+npt_dt_v4 <- read_csv(file.choose())
 
 # Graph Object
-npt_graph <- tbl_graph(edges = npt_dt_v3, directed = FALSE) %>%
+npt_graph <- tbl_graph(edges = npt_dt_v4, directed = FALSE) %>%
   mutate(
-    type = ifelse(name %in% npt_dt_v3$sp, "Bat", "Diet"),
+    type = ifelse(name %in% npt_dt_v4$sp, "Bat", "Diet"),
     size = centrality_degree()
   )
 
@@ -659,7 +680,7 @@ new_layout <- new_layout %>% arrange(match(name, node_df$name))
 labelsize <- 3.5
 edgecol <- "lightgray"
 edgewd <- 0.4
-edgealpha <- 0.4
+edgealpha <- 1
 batshp <- 17
 batcol <- "turquoise3"
 dietshp <- 16
@@ -669,7 +690,7 @@ title <- "Custom Network Layout\n(Top 10 Prey at Center, Bats in Middle, Rest of
 legend_lbl = "Node Type"
 
 ### Plot ----
-ggraph(npt_graph,
+npt_network <- ggraph(npt_graph,
        layout = "manual",
        x = new_layout$x,
        y = new_layout$y) +
@@ -692,12 +713,25 @@ ggraph(npt_graph,
                      name = legend_lbl) +
   scale_size_continuous(range = node_sizerange, guide = "none") +
   #ggtitle(title) + # add title if needed
-  theme_void() +
+  theme_classic() +
   theme(legend.title = element_text(size = 14),
         legend.text = element_text(size = 12),
         legend.key.spacing = unit(8, "pt"),
-        legend.box.spacing = unit(0, "pt")) +
+        legend.box.spacing = unit(0, "pt"),
+        axis.line = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank()) +
   guides(color = guide_legend(override.aes = list(size = 2.5))) # change legend icons with size
+
+# export to eps and pdf
+
+ggsave(filename = "es_fig2_npt_network_v3_02102025.eps",
+       plot = npt_network,
+       width = fig_width_pixels/dpi, # only for raster outputs
+       height = fig_height_pixels/dpi, # only for raster outputs
+       units = "in", 
+       dpi = dpi) # only for raster outputs
 
 # Taxonomy -----
 
