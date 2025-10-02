@@ -259,6 +259,12 @@ slice_max(pub_cumsum,
 
 # check pub_cumsum endpoint totals match that of category wise citations totals, code available above 
 
+# Review revision 02-10-2025 - Reorder the categories
+  
+# convert categories as factor
+pub_cumsum$category <- as_factor(pub_cumsum$category)
+
+# converting as factor seems to somehow give the desired order of factors already, so not doing it explicitly anymore
 
 ## Variables for tweaks ----
 
@@ -268,33 +274,34 @@ label_df <- pub_cumsum %>% slice_max(order_by = pub_cumsum,
 lwd = 0.8
 
 ## Plot ----
-eb_fig1 <- ggplot(pub_cumsum,aes(year,pub_cumsum,
+eb_fig1 <- ggplot(pub_cumsum,
+                  aes(year,pub_cumsum,
                       group = category,
                       colour = category)) +
   geom_line(linewidth = lwd)+
   labs(x = "Year of Publication",
        y = "Cumulative number of publications")+
-  scale_color_manual(values = c("violet",
-                                "steelblue",
+  scale_color_manual(values = c("steelblue",
+                                "violet",
+                                "orange",
                                 "darkgray",
-                                "turquoise",
-                                "orange"),
-                     labels = c("Diet",
-                                "Disease Ecology",
-                                "Habitat Use",
+                                "turquoise"),
+                     labels = c("Disease Ecology",
+                                "Diet",
                                 "Movement Ecology",
-                                "Toxicology"),
+                                "Toxicology",
+                                "Habitat Use"),
                      name = "Category")+
   geom_point(data = label_df,
              aes(shape = category,
              colour = category),
              size = 3) +
-  scale_shape_manual(values = c(17:19,15,26), #ignore warning, one invalid pch value for shape given intentionally to create a void shape
-                     labels = c("Diet",
-                                "Disease Ecology",
-                                "Habitat Use",
+  scale_shape_manual(values = c(17,15,26,8,19), #ignore warning, one invalid pch value for shape given intentionally to create a void shape
+                     labels = c("Disease Ecology",
+                                "Diet",
                                 "Movement Ecology",
-                                "Toxicology"),
+                                "Toxicology",
+                                "Habitat Use"),
                      name = "Category") +
   theme_classic()+
   theme(axis.title = element_text(size = 14),
@@ -307,18 +314,18 @@ eb_fig1 <- ggplot(pub_cumsum,aes(year,pub_cumsum,
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14, hjust = 0.5))
 
-# implementing ggsave instead of image saving for consistency here - original figures weremade at below resolution
+# implementing ggsave instead of image saving for consistency here - original figures were made at below resolution
 
  fig_width_pixels = 2159
  fig_height_pixels = 1439
  dpi = 172
 
-ggsave(filename = "eb_fig1_v3_01072025.png",
+ggsave(filename = "eb_fig1_v4_02102025.pdf",
        plot = eb_fig1,
-       width = fig_width_pixels/dpi,
-       height = fig_height_pixels/dpi,
-       units = "in",
-       dpi = dpi)
+       width = fig_width_pixels/dpi, # only for raster outputs
+       height = fig_height_pixels/dpi, # only for raster outputs
+       units = "in", 
+       dpi = dpi) # only for raster outputs
 
 # EB Heatmap data cleanup ----
 ## Formatting data for QGIS -----
