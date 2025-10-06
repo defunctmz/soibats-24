@@ -473,7 +473,7 @@ layout_centrality <- layout_with_kk(as.igraph(pt_graph),
 
 layout = layout_centrality
 labelsize = 4
-edgecol = "lightgray" ; edgewd = 0.4 ; edgealpha = 0.4
+edgecol = "lightgray" ; edgewd = 0.4 ; edgealpha = 0.8
 batshp = 17 ; batcol = "turquoise"
 dietshp = 16 ; dietcol = "violet"
 node_sizerange = c(2,6)
@@ -481,9 +481,9 @@ title = "Pteropotid Bats and diet network (Node Size = Number of Connections)"
 legend_lbl = "Node Type"
 
 ### Plotting ----
-ggraph(pt_graph,
+pt_graph_p <- ggraph(pt_graph,
        layout = layout) +
-  geom_edge_link(aes(edge_alpha = edgealpha),
+  geom_edge_link(alpha = edgealpha,
                  color = edgecol,
                  width = edgewd,
                  show.legend = F) +
@@ -506,8 +506,14 @@ ggraph(pt_graph,
   theme(legend.title = element_text(size = 14),
         legend.text = element_text(size = 12),
         legend.key.spacing = unit(8, "pt"),
-        legend.box.spacing = unit(0, "pt")) +
+        legend.box.spacing = unit(0, "pt"),
+        plot.background = element_rect(fill = "white")) +
   guides(color = guide_legend(override.aes = list(size = 2.5))) # change legend icons with size
+
+# export to pdf - do not export this figure to eps format. Thi figure has transparency (edgealpha) utilied, that does not work well with eps export. Use the export to pdf GUI option under plot tabs of Rstudio, A4 landscape plot
+
+ggsave(plot = pt_graph_p,
+       filename = "es_fig1_pt_network_v3_06102025.pdf")
 
 # ES - Non-Pteropotid Network - Clean up ----
 npt_dt <- read_csv(file.choose()) # use Non_Pteropodid_v1_20250111.csv 
@@ -680,7 +686,7 @@ new_layout <- new_layout %>% arrange(match(name, node_df$name))
 labelsize <- 3.5
 edgecol <- "lightgray"
 edgewd <- 0.4
-edgealpha <- 1
+edgealpha <- 0.7
 batshp <- 17
 batcol <- "turquoise3"
 dietshp <- 16
@@ -724,14 +730,10 @@ npt_network <- ggraph(npt_graph,
         axis.text = element_blank()) +
   guides(color = guide_legend(override.aes = list(size = 2.5))) # change legend icons with size
 
-# export to eps and pdf
+# export to pdf - do not export this figure to eps format. Thi figure has transparency (edgealpha) utilied, that does not work well with eps export. Use the export to pdf GUI option under plot tabs of Rstudio, A4 landscape plot
 
-ggsave(filename = "es_fig2_npt_network_v3_02102025.eps",
-       plot = npt_network,
-       width = fig_width_pixels/dpi, # only for raster outputs
-       height = fig_height_pixels/dpi, # only for raster outputs
-       units = "in", 
-       dpi = dpi) # only for raster outputs
+ggsave(filename = "es_fig2_npt_network_v3_06102025.pdf",
+       plot = npt_network)
 
 # Taxonomy -----
 
@@ -750,7 +752,7 @@ col = "darkturquoise"
 
 ## Plot ----
 
-ggplot(tx_dt_csum,aes(year,
+tx_fig1_p <- ggplot(tx_dt_csum,aes(year,
                       csum)) +
   annotate(geom = "rect",
            xmin = -Inf, xmax = 1947,
@@ -780,6 +782,10 @@ ggplot(tx_dt_csum,aes(year,
   theme(axis.title = element_text(size = 14),
         axis.text = element_text(size = 12))
 
+# export to pdf - do not export this figure to eps format. This figure has transparency (alpha) utilised, that does not work well with .eps export. Use the export to pdf GUI option under plot tabs of Rstudio, A4 landscape plot
+ggsave(plot = tx_fig1_p,
+       filename = "taxon_fig1_v2_06102025.pdf")
+
 # Citizen Science ----
 
 ## CS Fig 1 ----
@@ -802,19 +808,25 @@ cs_fig1 <- cs_fig1 %>%
   mutate(csum = cumsum(count))
 
 ### Variables for tweaks ----
-ibpcol =  "darkturquoise"
+ibpcol =  "steelblue"
 inatcol = "violet"
 
 ### Plot ----
-ggplot(cs_fig1,
+cs_fig1_p <- ggplot(cs_fig1,
        aes(x = year, y = csum, color = dataset)) +
-  geom_line(linewidth = 0.8,
-            position = "jitter") +
+  geom_line(linewidth = 0.8) +
+  geom_point(data = slice_max(cs_fig1,order_by = year, n = 1),
+             aes(shape = dataset),
+             size = 3)+
   scale_y_continuous(breaks = c(seq(0,300,300),seq(500,3000,500))) +
   scale_x_continuous(breaks = c(seq(1994,2024,5))) +
   scale_color_manual(labels = c("IBP","Inaturalist"),
                      values = c("ibp" = ibpcol,
                               "inat" = inatcol),
+                     name = "Dataset") +
+  scale_shape_manual(labels = c("IBP","Inaturalist"),
+                     values = c("ibp" = 8,
+                                "inat" = 15),
                      name = "Dataset") +
   labs(x = "Year",
        y = "Cumulative number of observations") +
@@ -824,7 +836,12 @@ ggplot(cs_fig1,
         axis.text = element_text(size = 12),
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 12))
-  
+
+# export
+ggsave(plot = cs_fig1_p,
+       filename = "cs_fig1_v2_06102025.eps",
+       units = "in")
+
 ## CS Fig 2 ----
 
 ### Data Input ----
@@ -844,9 +861,10 @@ inatcol = "violet"
 
 ### Plot ----
 
-ggplot(cs_fig2,
+cs_fig2_p <- ggplot(cs_fig2,
        aes(x = sr, y = count, color = dataset)) +
-  geom_line(linewidth = 0.8) +
+  geom_line(linewidth = 1.1,
+            aes(linetype = dataset)) +
   geom_label(aes(label = count), col = "black") +
   scale_x_continuous(breaks = 1:12, labels = month.name) +
   scale_y_continuous(breaks = c(seq(0,40,10),seq(50,350,50),400)) +
@@ -854,6 +872,9 @@ ggplot(cs_fig2,
                                 "inat" = inatcol),
                      labels = c("IBP","Inaturalist"),
                      name = "Dataset") +
+  scale_linetype_manual(values = c(1,3),
+                        labels = c("IBP","Inaturalist"),
+                        name = "Dataset") +
   labs(x = "Month",
        y = "Number of observations (1994-2024)") +
   theme_classic() + 
@@ -864,6 +885,11 @@ ggplot(cs_fig2,
         axis.text = element_text(size = 12),
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14))
+
+# export
+ggsave(plot = cs_fig2_p,
+       filename = "cs_fig2_v2_06102025.pdf",
+       units = "in")
 
 #### Merged datasets version ----
 cs_fig2_dtmerge <- cs_fig2 %>% 
